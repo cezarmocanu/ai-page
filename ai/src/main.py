@@ -1,70 +1,45 @@
-from cv2 import waitKey,imread, Sobel,filter2D, cvtColor, cornerHarris, morphologyEx
-from cv2 import GaussianBlur, Canny, dilate, erode, bilateralFilter
-from cv2 import CV_64F, COLOR_BGR2GRAY, MORPH_OPEN, MORPH_GRADIENT, MORPH_CLOSE, MORPH_TOPHAT, MORPH_BLACKHAT
+
+from cv2 import *
 from constants import CLINICAL_DS
 from utils import show, getResource
 import numpy as np
 
 
-def selectCheckboxes():
-  img1 = imread(getResource(CLINICAL_DS, 0))
-
-  gray = cvtColor(img1,COLOR_BGR2GRAY)
-  ###possible filter for selecting lines
-  # blur_kernel = np.ones((9, 9))
-  # blur_kernel *= -1
-  # blur_kernel[4, :] = 81
-  # blur_kernel /= 81
-
-  blur = GaussianBlur(img1, (15,15) , 9)
+def selectCheckboxes(img, contour_weight = 20):
+  ##adaugarea de blur gausian pentru a diferentia zonele de interes
+  blur = GaussianBlur(img, (15,15) , 9)
+  
+  ##filtrarea bilaterala ce are scopul de a pastra muchiile in timp ce filtreaza
+  ##sunetul ce afeacteaza imaginea
   blur = bilateralFilter(blur,5,100,100)
-  blur = bilateralFilter(blur,5,50,50)
+  
+  ##detectarea muchiilor
   canny = Canny(blur, 100, 210)
-
+  
+  ##dilatarea muchiilor pentru unirea contururilor
   kernel = np.ones((3,3),np.uint8)
+  dil_canny = dilate(canny, kernel, iterations = 2)
+  
+  ##detectarea de contururi si filtrarea lor in functie de dimensiune
+  contours, _ = findContours(dil_canny, RETR_EXTERNAL, CHAIN_APPROX_NONE)
+  contours = np.array(contours)
+  
+  areas_filter = np.array([True if contourArea(ctr) >= 500 else False  for ctr in contours])
+  goodContours = contours[areas_filter]
+  
+  mask = np.zeros_like(img)
+  drawContours(mask, goodContours, -1, (255,255,255), contour_weight)
 
-  dil_canny = dilate(canny, kernel, iterations=3)
-  
-  # final = dil_blackhat - dil_canny
-  
-  for_harris = np.float32(dil_canny)
-  harris = cornerHarris(for_harris,4,3,0.04)
-
-  dil_harris = dilate(harris, kernel, iterations=3)
-  img1[dil_harris > 0.1 * dil_harris.max()] = [0,0,255]
-
-  show(blur)
-  show(dil_canny)
-  show(img1)
-  
-  
+  return mask
 
 def init():
-  img1 = imread(getResource(CLINICAL_DS, 0))
+  img1 = imread(getResource(CLINICAL_DS, 2))
   
-  # gray = cvtColor(img1,COLOR_BGR2GRAY)
+  no_checkboxes_img = add(img1,selectCheckboxes(img1))
 
-  
-
-  # sobely = Sobel(gray,CV_64F, 1, 1, ksize=1)
-
-  # gray = np.float32(gray)
-
-  # dst = cornerHarris(gray,4,3,0.04)
-  # kernel= np.ones((7,7), np.uint8)
-  # dst = dilate(dst,kernel, iterations = 1)
-  # img1[dst > 0.7 * dst.max()]= [255,127,127]
-
-
-
-  #result is dilated for marking the corners, not important
-  # dst = cv2.dilate(dst,None)
-  # show(sobely)
-  # show(img1)
-  selectLines()
-
-
+  show(no_checkboxes_img)
   waitKey(0)
+  destroyAllWindows()
 
 if __name__ == "__main__":
   init()
