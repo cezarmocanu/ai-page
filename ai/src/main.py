@@ -38,45 +38,6 @@ def select_boxes(img):
   
   show(img)
 
-
-def combine_words():
-  data1 = [[759544, 'Clinical', 95, 358, 306], [762249, 'Data', 95, 582, 307], [759909, 'Set', 96, 723, 306], [792266, '(To', 89, 827, 319], [792337, 'fill', 89, 898, 319]]
-  data2 = [[757062, 'Clinical', 96, 357, 305], [759767, 'Data', 95, 581, 306], [757427, 'Set', 96, 722, 305], [789784, '(To', 37, 826, 318], [789855, 'fill', 94, 897, 318]]
-  
-  data = []
-
-  # i = 0
-  # j = 0
-  
-  # while i < len(data1) and j < len(data2):
-  #   if data1[i][0] <= data2[j][0]:
-  #     data.append(data1[i])
-  #     i += 1      
-  #   else:
-  #     data.append(data2[j])
-  #     j += 1
-  
-  # print(i,j)
-  # # if i >= j:
-  # #   while i <= len(data1):
-  # #     data.append(data1[i])
-  # #     i += 1      
-  
-  # if i < j:
-  #   while i < len(data1):
-  #     data.append(data1[i])
-  #     i += 1 
-  # else:
-  #   while j < len(data2):
-  #     data.append(data2[2])
-  #     j += 1 
-  
-  data = np.array(data)
-  
-  print(data[::,0])
-  print(data[::,1])
-  print(data[::,2])
-
 def init():
   img1 = imread(getResource(CLINICAL_DS, 0))
   
