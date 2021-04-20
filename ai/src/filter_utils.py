@@ -18,7 +18,7 @@ def selectCheckboxes(img, contour_weight = 15):
   
   ##detectarea de contururi si filtrarea lor in functie de dimensiune
   contours, _ = findContours(dil_canny, RETR_EXTERNAL, CHAIN_APPROX_NONE)
-  contours = np.array(contours)
+  contours = np.array(contours, dtype=object)
   
   areas_filter = np.array([True if contourArea(ctr) >= 1000 else False  for ctr in contours])
   good_contours = contours[areas_filter]
@@ -45,7 +45,7 @@ def selectLines(img):
   open_morph = morphologyEx(tophat, MORPH_OPEN, se)
   
   contours, _ = findContours(open_morph, RETR_EXTERNAL, CHAIN_APPROX_NONE)
-  contours = np.array(contours)
+  contours = np.array(contours, dtype=object)
   
   areas = np.array([contourArea(ctr) for ctr in contours])
   max_area = areas.max()
@@ -64,7 +64,7 @@ def selectGrayboxes(img):
   closing = morphologyEx(gray_mask, MORPH_CLOSE, se)
   
   contours, _ = findContours(closing, RETR_EXTERNAL, CHAIN_APPROX_NONE)
-  contours = np.array(contours)
+  contours = np.array(contours, dtype=object)
   
   areas = np.array([contourArea(ctr) for ctr in contours])
   max_area = areas.max()
@@ -79,3 +79,4 @@ def selectGrayboxes(img):
   drawContours(mask, good_contours, -1, (255,255,255), -1)
   drawContours(mask, good_contours, -1, (255,255,255), 20)
   return mask
+

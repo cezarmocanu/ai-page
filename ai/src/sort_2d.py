@@ -2,9 +2,20 @@
 import numpy as np
 import math
 
-def get_angle(center, p):
-  x = [center[0] - p[0]]
-  y = [center[1] - p[1]]
+def aabb(box1, box2):
+  [x1, y1, w1, h1, *_] = box1
+  [x2, y2, w2, h2, *_] = box2
+  
+  if (x1 < x2 + w2 and
+      x1 + w1 > x2 and
+      y1 < y2 + h2 and
+      y1 + h1 > y2):
+    return True
+  return False
+  
+def get_angle(p1, p2):
+  x = [p1[0] - p2[0]]
+  y = [p1[1] - p2[1]]
   angle = np.arctan2(y, x)[0]
   if angle <= 0:
     angle += 2 * np.pi
