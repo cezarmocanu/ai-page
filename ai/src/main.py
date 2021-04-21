@@ -2,11 +2,17 @@ import numpy as np
 from cv2 import *
 from pytesseract import *
 
-from constants import CLINICAL_DS
+from constants import CLINICAL_DS, KEY
 from utils import show, getResource
 from filter_utils import *
 from sort_2d import *
 
+
+'''
+BUG: Rows may contains dublicated word
+OPT: QUICKSORT/MERGE_SORT
+OPT: CHECK FOR VISITED CHECKBOXES WHEN INTERSECTING WITH ROWS
+'''
 def get_boxes(img):
   d = image_to_data(img, output_type = Output.DICT)
   
@@ -33,15 +39,15 @@ def multifilter_word_querry(src_img):
   closing = morphologyEx(inverted, MORPH_CLOSE, kernel)
 
   boxes = get_boxes(img)
-  print('Processed... 1/5 (base)')
+  print('Processed... 1 / 5 (base)')
   boxes += get_boxes(binary)
-  print('Processed... 2/5 (binary)')
+  print('Processed... 2 / 5 (binary)')
   boxes += get_boxes(inverted)
-  print('Processed... 3/5 (inverted)')
+  print('Processed... 3 / 5 (inverted)')
   boxes += get_boxes(dilated)
-  print('Processed... 4/5 (dilated)')
+  print('Processed... 4 / 5 (dilated)')
   boxes += get_boxes(closing)
-  print('Processed... 5/5 (closing)')
+  print('Processed... 5 / 5 (closing)')
   
   sort_boxes_2d(boxes)
   print('Sorted contours...')
@@ -115,27 +121,76 @@ def select_rows(boxes, img):
   
   ### sortam cuvintele din linii crescator pe axa X
   for i in range(0, len(rows)):      
-    sorted(rows[i], key=lambda word: word[0])
-    start_word = rows[i][0]
-    end_word = rows[i][-1]
-    img = rectangle(img, (start_word[0], start_word[1]), (end_word[0] + end_word[2], end_word[1] + end_word[3]), (255,0,255), 3)
+    rows[i] = sorted(rows[i], key=lambda word: word[0])
+    # start_word = rows[i][0]
+    # end_word = rows[i][-1]
+    # img = rectangle(img, (start_word[0], start_word[1]), (end_word[0] + end_word[2], end_word[1] + end_word[3]), (255,0,255), 3)
     
-  show(img)
+  # show(img)
+  
+  rows = sorted(rows, key=lambda x: x[0][1])
   
   return rows
+
+def splitrows_by_checkboxes(text_rows, checkboxes, img):
+  
+  text_sentences = []
+  for row_index in range(len(text_rows)):
+    current_row = text_rows[row_index]
+    start_word = current_row[0]
+    end_word = current_row[-1]
+    row_box = [start_word[0], start_word[1], end_word[0] + end_word[2] - start_word[0], end_word[1] + end_word[3] - start_word[1]]
+    # img = rectangle(img, (row[0], row[1]), (row[0] + row[2], row[1] + row[3]), (255,0,255), 3)
+    
+    cut_positions = []
+    for i in range(0, len(checkboxes)):
+      if aabb(checkboxes[i], row_box):
+        cut_positions.append(checkboxes[i])
+    
+    cut_positions = sorted(cut_positions, key=lambda x: x[0])
+    
+    sentences = []
+    word_index = 0
+    
+    while len(cut_positions) > 0:
+      sentence = []
+      while len(cut_positions) > 0 and  current_row[0][KEY.X] <= cut_positions[0][KEY.X]:
+        # print(f'{[KEY.TEXT]} {current_row[word_index][KEY.X]} {cut_positions[0][KEY.X]}')
+        sentence.append(current_row[0])
+        current_row.pop(0)
+        word_index += 1
+      
+      cut_positions.pop(0)
+      sentences.append(sentence)
+      
+    sentences.append(current_row)
+    text_sentences.extend(sentences)
+    
+    for i in range(0, len(sentences)):      
+      sw = sentences[i][0]
+      ew = sentences[i][-1]
+      img = rectangle(img, (sw[0], sw[1]), (ew[0] + ew[2], ew[1] + ew[3]), (255,0,255), 3)
+
+  show(img)
+  
+  return text_sentences
 
 def init():
   img1 = imread(getResource(CLINICAL_DS, 0))
   
   no_graybox = add(img1, selectGrayboxes(img1))
 
-  no_checkboxes_img = add(no_graybox, selectCheckboxes(no_graybox))
+  checkbox_mask, checkbox_contours =  selectCheckboxes(no_graybox)
+  no_checkbox_img = add(no_graybox, checkbox_mask)
   
-  no_lines_img = add(no_checkboxes_img, selectLines(no_checkboxes_img))
+  no_lines_img = add(no_checkbox_img, selectLines(no_checkbox_img))
   
   boxes = multifilter_word_querry(no_lines_img)
   
-  select_rows(boxes, np.copy(no_lines_img))
+  text_rows = select_rows(boxes, np.copy(no_lines_img))
+  
+  splitrows_by_checkboxes(text_rows, checkbox_contours, np.copy(no_graybox))
+  
   waitKey(0)
   destroyAllWindows()
 

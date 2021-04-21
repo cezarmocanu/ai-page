@@ -26,7 +26,12 @@ def selectCheckboxes(img, contour_weight = 15):
   mask = np.zeros_like(img)
   drawContours(mask, good_contours, -1, (255,255,255), contour_weight)
 
-  return mask
+  contours_bbox = []
+  for ctr in good_contours:
+    (x, y, w, h) = boundingRect(ctr)
+    contours_bbox.append([x, y, w, h])
+    
+  return mask, contours_bbox
 
 
 def selectLines(img):
