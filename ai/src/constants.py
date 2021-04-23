@@ -1,4 +1,7 @@
 import os
+import pprint
+
+PRETTY_PRINTER = pprint.PrettyPrinter(indent=4)
 
 ROOT = os.path.dirname(os.path.realpath(__file__))
 RESOURCES = '{root}/../resources'.format(root=ROOT)
@@ -16,3 +19,9 @@ class KEY:
   H = 3
   TEXT = 4
   CONF = 5
+  CHECBOX = 'CHECKBOX'
+  LABEL = 'LABEL'
+  TOPIC = 'TOPIC'
+  TITLE = 'TITLE'
+  INPUTS = 'INPUTS'
+  

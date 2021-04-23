@@ -1,16 +1,17 @@
 import numpy as np
+import builtins
 from cv2 import *
 from pytesseract import *
 
 from constants import CLINICAL_DS, KEY
-from utils import show, getResource
+from utils import show, getResource, pprint, to_json
 from filter_utils import *
 from sort_2d import *
+from functools import reduce
 
 
 '''
 BUG: Rows may contains dublicated word
-OPT: QUICKSORT/MERGE_SORT
 OPT: CHECK FOR VISITED CHECKBOXES WHEN INTERSECTING WITH ROWS
 '''
 def get_boxes(img):
@@ -23,11 +24,14 @@ def get_boxes(img):
     (x, y, w, h, text, conf) = (d['left'][i], d['top'][i], d['width'][i], d['height'][i], d['text'][i], d['conf'][i])
     if len(text) > 0 and conf > 50:
       boxes.append([x, y, w, h, text, conf])
-  
+      # img = rectangle(img, (x,y), (x+w,y+h), (0,255,0),10)
+      
+  # show(img)
   return boxes
   
 def multifilter_word_querry(src_img):
   img = np.copy(src_img)
+  # img_sort = np.copy(img)
   
   _, binary = threshold(img, 127,255, THRESH_BINARY)
   
@@ -35,9 +39,9 @@ def multifilter_word_querry(src_img):
   
   kernel = np.ones((3,3),np.uint8)
   dilated = dilate(inverted, kernel, iterations = 1)
-
+  
   closing = morphologyEx(inverted, MORPH_CLOSE, kernel)
-
+  
   boxes = get_boxes(img)
   print('Processed... 1 / 5 (base)')
   boxes += get_boxes(binary)
@@ -52,13 +56,16 @@ def multifilter_word_querry(src_img):
   sort_boxes_2d(boxes)
   print('Sorted contours...')
 
+  
   # separates same word in different location
   for i in range(0, len(boxes) - 1):
+    # img_sort = line(img_sort, (boxes[i][0],boxes[i][1]), (boxes[i+1][0],boxes[i+1][1]), (0,255,0),15)
     if (boxes[i][4] == boxes[i+1][4] and
         (abs(boxes[i][0] - boxes[i+1][0]) > 10 or
         abs(boxes[i][1] - boxes[i+1][1]) > 10)):
       boxes.insert(i + 1, [0,0,0,0,'|',0])
   
+  # show(img_sort)
   i = 0
   filtered_boxes = []
   
@@ -166,30 +173,149 @@ def splitrows_by_checkboxes(text_rows, checkboxes, img):
     sentences.append(current_row)
     text_sentences.extend(sentences)
     
-    for i in range(0, len(sentences)):      
-      sw = sentences[i][0]
-      ew = sentences[i][-1]
-      img = rectangle(img, (sw[0], sw[1]), (ew[0] + ew[2], ew[1] + ew[3]), (255,0,255), 3)
+    # for i in range(0, len(sentences)):      
+    #   sw = sentences[i][0]
+    #   ew = sentences[i][-1]
+      # img = rectangle(img, (sw[0], sw[1]), (ew[0] + ew[2], ew[1] + ew[3]), (255,0,255), 3)
 
-  show(img)
+  # show(img)
   
   return text_sentences
 
-def init():
-  img1 = imread(getResource(CLINICAL_DS, 0))
-  
-  no_graybox = add(img1, selectGrayboxes(img1))
 
+def associate_checkboxes(sentences, checkboxes, img):
+  
+  sentences = sentences.copy()
+  checkboxes = checkboxes.copy()
+  # index = 0
+  # cbs = len(checkboxes)
+  form_options = []
+  # checkbox_index = 0
+  while len(checkboxes) > 0:
+    cbox = checkboxes[0]
+    option_dict = {}
+    for i in range(0,len(sentences)):
+      sentence = sentences[i]
+      distance = get_distance([cbox[KEY.X] + cbox[KEY.W], cbox[KEY.Y]], [sentence[0][KEY.X], sentence[0][KEY.Y]])
+      if distance < 50:
+        x = cbox[KEY.X]
+        y = builtins.min(cbox[KEY.Y], sentence[0][KEY.Y])
+        w = sentence[-1][KEY.X] + sentence[-1][KEY.W] - x
+        h = builtins.max(cbox[KEY.H], sentence[0][KEY.H])
+        
+        option_dict[KEY.CHECBOX] = checkboxes.pop(0)
+        option_dict[KEY.LABEL] = sentences.pop(i)
+        break;
+    form_options.append(option_dict)
+    # index += 1
+    
+  sentences = sorted(sentences, key= lambda x: x[0][KEY.Y], reverse=True)
+  
+  topics = []
+  
+  for i in range(0, len(sentences)):      
+    sw = sentences[i][0]
+    ew = sentences[i][-1]
+    
+    topic = {}
+    topic[KEY.TITLE] = sentences[i]
+    
+    topic_inputs = []
+    cb = 0
+    while cb < len(form_options):
+      [x, y ,w ,h ] = form_options[cb][KEY.CHECBOX]    
+
+      if y > sw[KEY.Y]:
+        img = line(img, (x,y), (sw[KEY.X], sw[KEY.Y]), (255,0,0), 10)
+        topic_inputs.append(form_options.pop(cb))
+        cb -= 1
+      cb += 1
+    
+    if len(topic_inputs) > 0:
+      topic[KEY.INPUTS] = topic_inputs
+      topics.append(topic)
+
+  return topics
+  
+def save_data(topics):
+  # to_json('topics.json', topics)
+  
+  compressed_topics = []
+  
+  for topic in topics:
+    compressed_topic = {}
+    
+    title = ""
+    for box in topic[KEY.TITLE]:
+      title += f'{box[KEY.TEXT]} '
+    
+    compressed_topic[KEY.TITLE] = title
+    
+    compressed_inputs = []
+    
+    for topic_input in topic[KEY.INPUTS]:
+      compressed_input = {}
+      
+      compressed_input[KEY.CHECBOX] = topic_input[KEY.CHECBOX]
+      
+      label = []
+      for box in topic_input[KEY.LABEL]:
+        if len(label) == 0 or box[KEY.TEXT] != label[-1]:
+          label.append(box[KEY.TEXT])
+      
+      separator = ' '
+      compressed_input[KEY.LABEL] = separator.join(label)
+      
+      compressed_inputs.append(compressed_input)
+    
+    compressed_topic[KEY.INPUTS] = compressed_inputs
+    
+    compressed_topics.append(compressed_topic)
+  
+  
+  to_json('data.min.json', compressed_topics)
+  return compressed_topics
+
+def GET_IMAGE(page_number):
+  if getResource(CLINICAL_DS, page_number) == False:
+    return "page does not exist"
+  
+  img1 = imread(getResource(CLINICAL_DS, page_number))
+  
+  return img1
+
+def OCR(page_number):
+  if getResource(CLINICAL_DS, page_number) == False:
+    return "page does not exist"
+  
+  img1 = imread(getResource(CLINICAL_DS, page_number))
+  
+  # show(img1)
+  no_graybox = add(img1, selectGrayboxes(img1))
+  # show(no_graybox)
+  
   checkbox_mask, checkbox_contours =  selectCheckboxes(no_graybox)
   no_checkbox_img = add(no_graybox, checkbox_mask)
+  # show(no_checkbox_img)
   
   no_lines_img = add(no_checkbox_img, selectLines(no_checkbox_img))
+  # show(no_lines_img)
   
   boxes = multifilter_word_querry(no_lines_img)
   
   text_rows = select_rows(boxes, np.copy(no_lines_img))
   
-  splitrows_by_checkboxes(text_rows, checkbox_contours, np.copy(no_graybox))
+  sentences = splitrows_by_checkboxes(text_rows, checkbox_contours, np.copy(no_graybox))
+  
+  topics = associate_checkboxes(sentences, checkbox_contours, np.copy(no_graybox))
+  
+  compressed_topics = save_data(topics)
+  
+  return compressed_topics
+        
+def init():
+  
+  OCR(1)
   
   waitKey(0)
   destroyAllWindows()
