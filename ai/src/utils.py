@@ -16,8 +16,6 @@ def getResource(resource, file_index = 0):
   
   if path.exists(filepath):
     return filepath
-  
-  return False
 
 def show(img, name=None):
   if name is None:

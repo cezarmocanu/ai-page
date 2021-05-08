@@ -3,11 +3,13 @@ import builtins
 from cv2 import *
 from pytesseract import *
 
-from constants import CLINICAL_DS, KEY
+from constants import CLINICAL_DS, KEY, OUTPUTS
 from utils import show, getResource, pprint, to_json
 from filter_utils import *
 from sort_2d import *
 from functools import reduce
+from os import path
+import json
 
 
 '''
@@ -236,8 +238,8 @@ def associate_checkboxes(sentences, checkboxes, img):
       topics.append(topic)
 
   return topics
-  
-def save_data(topics):
+      
+def save_data(topics, page_number):
   # to_json('topics.json', topics)
   
   compressed_topics = []
@@ -268,13 +270,21 @@ def save_data(topics):
       
       compressed_inputs.append(compressed_input)
     
-    compressed_topic[KEY.INPUTS] = compressed_inputs
+    compressed_topic[KEY.INPUTS] = compressed_inputs[::-1]
     
     compressed_topics.append(compressed_topic)
   
-  
-  to_json('data.min.json', compressed_topics)
+  compressed_topics = compressed_topics[::-1]
+  to_json(f'./outputs/ocr-{page_number}.min.json', compressed_topics)
   return compressed_topics
+
+def LOAD_DATA(page_number):
+      
+  filepath = r"{dir}/ocr-{page_number}.min.json".format(dir=OUTPUTS, page_number=page_number);
+  if not path.exists(filepath):
+      return {"error": "page does not exist"}
+  
+  return json.load(open(filepath))
 
 def GET_IMAGE(page_number):
   if getResource(CLINICAL_DS, page_number) == False:
@@ -309,7 +319,7 @@ def OCR(page_number):
   
   topics = associate_checkboxes(sentences, checkbox_contours, np.copy(no_graybox))
   
-  compressed_topics = save_data(topics)
+  compressed_topics = save_data(topics, page_number)
   
   return compressed_topics
         
