@@ -2,12 +2,10 @@ import useCanvas from './useCanvas';
 import {EDIT_MODES} from './constants';
 
 function Canvas({draw, handlers, editMode, ...props}){
-
     const canvasRef = useCanvas(draw, handlers);
     const cursor = () => {
         switch(editMode) {
             case EDIT_MODES.PAN:
-                
                 return "move";
             default:
                 return "default";
