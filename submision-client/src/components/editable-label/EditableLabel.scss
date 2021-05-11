@@ -1,6 +1,8 @@
-.dropdown-label{
-    white-space: break-spaces;
-    background: none;
-    padding:0;
-    border:0;
+.editable-label{
+    font-size:0.8rem;
+    cursor: pointer;
+
+    .alert{
+        padding:0.3rem;
+    }
 }

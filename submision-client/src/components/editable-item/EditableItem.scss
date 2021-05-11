@@ -6,3 +6,7 @@
         height: 100%;
     }
 }
+
+.dropdown-toggle::after{
+    display:none;
+}

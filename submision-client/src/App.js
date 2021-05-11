@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container, Nav, Row, Col, Button, ListGroup} from 'react-bootstrap';
+import {Container, Nav, Row, Col, Button, ListGroup, Alert} from 'react-bootstrap';
 import {useState} from 'react';
 import {BsArrowsMove, BsEyeFill} from 'react-icons/bs';
 import {Canvas} from './Canvas';
@@ -9,6 +9,7 @@ import {EDIT_MODES, RANDOM_COLORS} from './constants';
 import {EditableItem} from './components/editable-item/EditableItem';
 
 import './App.scss';
+import React from 'react';
 
 const CANVAS_CONFIG = {
   WIDTH: 600,
@@ -21,15 +22,23 @@ const CANVAS_CONFIG = {
 
 function App() {
 
-  const [image, imageLoaded] = useImage('http://localhost:5000/image/2');
-  const [prediction, predictionLoaded] = useResource('http://localhost:5000/ocr/2');
+  const [image, imageLoaded] = useImage('http://localhost:5000/image/1');
+  const [prediction, predictionLoaded] = useResource('http://localhost:5000/ocr/1');
 
   const [offset ,setOffset] = useState({x:0,y:0});
   const [origin, setOrigin] = useState({x:0, y:0});
   const [editMode, setEditMode] = useState(EDIT_MODES.OBSERVE);
+  const [isDragging, setIsDragging] = useState(false);
   const [rerender, setRerender] = useState(true);//set rerender using only one setState
 
-  const [isDragging, setIsDragging] = useState(false);
+  const [editedValue, setEditedValue] = useState("null");
+
+  
+
+
+
+
+
 
   const draw = (ctx, dt) => {
 
@@ -109,6 +118,17 @@ function App() {
     setIsDragging(false);
   };
 
+
+
+  const onSelect = (value) => {
+    setEditedValue(value);
+  };
+
+  const onCancelEdit = (e) => {
+    e.preventDefault();
+    setEditedValue(false);
+  }
+
   const createEditModeHandler = (editMode) => (e) => setEditMode(editMode);
   return (
     <Container fluid className="full bg-light p-0"> 
@@ -143,9 +163,28 @@ function App() {
             height={CANVAS_CONFIG.HEIGHT}
           />
         </Col>
-        <Col xs={4} className="bg-dark full overflow-scroll pt-3">
-          <ListGroup className="">
-            {prediction.map(pred => <EditableItem prediction={pred} />)}
+        <Col xs={4} className="bg-light full p-relative border-left overflow-hidden">
+          <Row className="edit-overlay bg-dark">
+          {editedValue ?
+            <React.Fragment>
+              <Col xs={12} className="mb-2">
+                <textarea className="fluid" value={editedValue} />
+              </Col>
+              <Col xs={6}>
+                <Button className='fluid' variant="info">Save</Button>
+              </Col>
+              <Col xs={6}>
+                <Button className='fluid' variant="danger" onClick={onCancelEdit}>Cancel</Button>
+              </Col>
+            </React.Fragment>
+            :
+            <Col xs={12} className="mb-2">
+              <Alert className="m-0" variant="secondary">Click on any label to toggle edit</Alert>
+            </Col>
+          }
+          </Row>
+          <ListGroup className="prediction-list">
+            {prediction.map(pred => <EditableItem onSelect={onSelect} prediction={pred} />)}
           </ListGroup>
         </Col>
         

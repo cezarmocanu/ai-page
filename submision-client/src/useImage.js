@@ -11,7 +11,7 @@ const useImage = (url) => {
     useEffect(()=>{
         const fetchImage = async () => {
             const response = await fetch(url);
-            const blob = await response.blob()
+            const blob = await response.blob();
             const img = new Image();
             img.src = URL.createObjectURL(blob);;
             img.onload = handleImageOnload;
