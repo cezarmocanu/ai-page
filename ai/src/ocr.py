@@ -3,12 +3,13 @@ import builtins
 from cv2 import *
 from pytesseract import *
 
-from constants import CLINICAL_DS, KEY, OUTPUTS
+from constants import CLINICAL_DS,RESOURCES, KEY, OUTPUTS, COLLECTED
 from utils import show, getResource, pprint, to_json
 from filter_utils import *
 from sort_2d import *
 from functools import reduce
 from os import path
+from keypoint_detector import match_keypoints
 import json
 
 
@@ -325,7 +326,65 @@ def OCR(page_number):
         
 def init():
   
-  OCR(1)
+  #OCR(1)
+  topics = LOAD_DATA(0)
+  template_path = r"{dir}/clinical_ds/jpg/1.jpg".format(dir=RESOURCES);
+  query_path = r"{dir}/1-birdeye.jpg".format(dir=COLLECTED);
+  
+  
+  t_image = imread(template_path)
+  q_image = imread(query_path)
+  
+  # q_gray = cvtColor(q_image,COLOR_BGR2GRAY)
+  # _, q_thresh = threshold(q_image, 127, 255, THRESH_BINARY)
+  
+  
+  
+  birdeye = match_keypoints(t_image, q_image)
+  show(birdeye)
+  
+  
+  mean = 0
+  cb_count = 0
+  ##calcualte mean gray
+  for topic in topics:
+    inputs = topic['INPUTS']
+    for inp in inputs:
+      [x, y, w, h] = inp['CHECKBOX']
+      roi = birdeye[y:y+h, x:x+w]
+      roiGray = cvtColor(roi,COLOR_BGR2GRAY)
+      _, roiThresh = threshold(roiGray, 127, 255, THRESH_BINARY_INV)
+      roiValue = countNonZero(roiThresh)
+      mean += roiValue
+      cb_count += 1
+      # show(roiThresh)
+        # print(roiValue)
+        
+  mean /= cb_count
+  
+  print(mean)
+  for topic in topics:
+    inputs = topic['INPUTS']
+    title = topic['TITLE']
+    print(title)
+    for inp in inputs:
+      [x, y, w, h] = inp['CHECKBOX']
+      label = inp['LABEL']
+      
+      roi = birdeye[y:y+h, x:x+w]
+      roiGray = cvtColor(roi,COLOR_BGR2GRAY)
+      _, roiThresh = threshold(roiGray, 127, 255, THRESH_BINARY_INV)
+      roiValue = countNonZero(roiThresh)
+      # rectangle(birdeye,(x,y),(x+w,y+h),(0,255,0), 10)
+      # show(roi)
+      # print(roiValue)
+      if roiValue > mean:
+        rectangle(birdeye,(x,y),(x+w,y+h),(0,255,0), FILLED)
+        print(f'>{label}')
+        # show(roi)
+        # print(roiValue)
+  show(birdeye);
+  
   
   waitKey(0)
   destroyAllWindows()

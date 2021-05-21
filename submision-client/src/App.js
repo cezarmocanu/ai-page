@@ -22,8 +22,8 @@ const CANVAS_CONFIG = {
 
 function App() {
 
-  const [image, imageLoaded] = useImage('http://localhost:5000/image/1');
-  const [prediction, predictionLoaded] = useResource('http://localhost:5000/ocr/1');
+  const [image, imageLoaded] = useImage('http://localhost:5000/image/0');
+  const [prediction, predictionLoaded] = useResource('http://localhost:5000/ocr/0');
 
   const [offset ,setOffset] = useState({x:0,y:0});
   const [origin, setOrigin] = useState({x:0, y:0});
