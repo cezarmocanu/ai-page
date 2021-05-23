@@ -1,0 +1,8 @@
+//bash
+createdb ai-page-db
+psql ai-page-db
+
+//psql
+
+CREATE USER "ai-page-admin" WITH ENCRYPTED PASSWORD '123456';
+GRANT ALL PRIVILEGES ON DATABASE "ai-page-db" TO "ai-page-admin";

@@ -11,6 +11,11 @@ pdf2jpg = "*"
 flask = "*"
 pillow = "*"
 flask-cors = "*"
+sqlalchemy = "*"
+flask-sqlalchemy = "*"
+psycopg2-binary = "*"
+flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
 
 [dev-packages]
 

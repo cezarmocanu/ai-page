@@ -239,10 +239,8 @@ def associate_checkboxes(sentences, checkboxes, img):
       topics.append(topic)
 
   return topics
-      
-def save_data(topics, page_number):
-  # to_json('topics.json', topics)
-  
+    
+def compress_data(topics):
   compressed_topics = []
   
   for topic in topics:
@@ -276,7 +274,10 @@ def save_data(topics, page_number):
     compressed_topics.append(compressed_topic)
   
   compressed_topics = compressed_topics[::-1]
-  to_json(f'./outputs/ocr-{page_number}.min.json', compressed_topics)
+  return compressed_topics
+
+def save_data(topics, page_number):
+  to_json(f'./outputs/ocr-{page_number}.min.json', compress_data(topics))
   return compressed_topics
 
 def LOAD_DATA(page_number):
@@ -320,8 +321,7 @@ def OCR(page_number):
   
   topics = associate_checkboxes(sentences, checkbox_contours, np.copy(no_graybox))
   
-  compressed_topics = save_data(topics, page_number)
-  
+  compressed_topics = compress_data(topics)
   return compressed_topics
         
 def init():
