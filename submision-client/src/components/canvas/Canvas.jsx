@@ -1,5 +1,5 @@
-import useCanvas from './useCanvas';
-import {EDIT_MODES} from './constants';
+import useCanvas from '../../hooks/useCanvas';
+import {EDIT_MODES} from '../../constants.js';
 
 function Canvas({draw, handlers, editMode, ...props}){
     const canvasRef = useCanvas(draw, handlers);

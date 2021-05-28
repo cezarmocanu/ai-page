@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
-from utils import show
+
+from .utils import show
 
 def match_keypoints(template_image, query_image):
     percent = 20

@@ -16,6 +16,8 @@ flask-sqlalchemy = "*"
 psycopg2-binary = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
+pika = "*"
+requests = "*"
 
 [dev-packages]
 

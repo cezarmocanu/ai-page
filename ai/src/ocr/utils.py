@@ -1,7 +1,6 @@
 import cv2 as cv
 import random
 import string
-from constants import PRETTY_PRINTER
 import json
 import os.path
 from os import path

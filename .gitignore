@@ -1,14 +1,16 @@
 /submision-client/node_modules/
 node_modules/
-# .expo/
-# npm-debug.*
-# *.jks
-# *.p8
-# *.p12
-# *.key
-# *.mobileprovision
-# *.orig.*
-# web-build/
-
-# macOS
-.DS_Store
+/form-collector/.expo/
+/form-collector/npm-debug.*
+/form-collector/*.jks
+/form-collector/*.p8
+/form-collector/*.p12
+/form-collector/*.key
+/form-collector/*.mobileprovision
+/form-collector/*.orig.*
+/form-collector/web-build/
+/form-collector/macOS
+/form-collector/.DS_Store
+/form-collector/node_modules/
+/storage/*
+/storage/

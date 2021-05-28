@@ -1,0 +1,1 @@
+python src/ocr_consumer.py

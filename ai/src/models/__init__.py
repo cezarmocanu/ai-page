@@ -6,3 +6,4 @@ from .Page import Page
 from .Topic import Topic
 from .Option import Option
 from .OCRAnalysis import OCRAnalysis
+from .TemplateImage import TemplateImage

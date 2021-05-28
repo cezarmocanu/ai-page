@@ -1,10 +1,12 @@
 from flask import Flask, jsonify,send_file, request
 from flask_cors import CORS
-from ocr import OCR, GET_IMAGE, LOAD_DATA
-from constants import KEY
+from ocr.ocr import OCR, GET_IMAGE, LOAD_DATA
+from ocr.constants import KEY, RESOURCES
 from PIL import Image
 import io
 import base64
+import cv2
+import numpy as np
 
 from models import *
 from schemas import dump,ma
@@ -19,29 +21,38 @@ CORS(app)
 
 db.create_all(app=app)
 
+@app.route('/rabbitmq/test')
+def rabbitmq_test():
+    return 'Success'
+
+
+@app.route('/test_image_upload')
+def test_image():
+    img = cv2.imread('{resources}/clinical_ds/jpg/2.jpg'.format(resources=RESOURCES))
+    encoded = cv2.imencode('.JPEG', img)[1].tostring()
+    template_image = TemplateImage(image=encoded)
+    
+    db.session.add(template_image)
+    db.session.commit()
+    
+    return 'Success'
+
+@app.route('/test_image_show/<page>')
+def test_image_show(page = 1):
+    template_image = TemplateImage.query.filter_by(id=page).first_or_404(description='No image with that id')
+    stream = io.BytesIO(template_image.image)
+    return send_file(stream, mimetype='image/JPEG')
+    
 @app.route('/form/<form_id>/add_page/')
 def test(form_id = 0):
     form = Form.query.filter_by(id=form_id).first_or_404(description='No form with that id')
     return jsonify(dump(form.pages))
-    
-    
-    # page = Page(order_number=len(form.pages) + 1,form_id=form_id)
-    # form.pages.append(page)
-    
-    # db.session.add(page)
-    # db.session.commit()
-    
-    # fs = FormSchema()
-    # ps = PageSchema(many=True)
-    # print((fs.dump(form).values))
-    # return jsonify(ps.dump(form.pages))
     
 @app.route('/ocr_analyze/<page_number>')
 def analyze(page_number = 0):
     
     ###TODO de verificat daca pagina deja a fost analizata
     ###
-    
     compressed_topics = OCR(int(page_number))
     
     page = Page(order_number=1)
@@ -91,10 +102,6 @@ def get_analysis(form_id = 0):
             topics.append(t)
         p['topics'] = topics
         output['pages'].append(p)
-    
-    
-    
-    
     
     return jsonify(output)
 

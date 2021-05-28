@@ -2,15 +2,16 @@ import numpy as np
 import builtins
 from cv2 import *
 from pytesseract import *
-
-from constants import CLINICAL_DS,RESOURCES, KEY, OUTPUTS, COLLECTED
-from utils import show, getResource, pprint, to_json
-from filter_utils import *
-from sort_2d import *
 from functools import reduce
 from os import path
-from keypoint_detector import match_keypoints
 import json
+
+from .constants import CLINICAL_DS,RESOURCES, KEY, OUTPUTS, COLLECTED
+from .utils import show, getResource, pprint, to_json
+from .filter_utils import *
+from .sort_2d import *
+from .keypoint_detector import match_keypoints
+
 
 
 '''
@@ -291,7 +292,6 @@ def LOAD_DATA(page_number):
 def GET_IMAGE(page_number):
   if getResource(CLINICAL_DS, page_number) == False:
     return "page does not exist"
-  
   img1 = imread(getResource(CLINICAL_DS, page_number))
   
   return img1

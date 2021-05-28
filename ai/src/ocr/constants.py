@@ -4,9 +4,9 @@ import pprint
 PRETTY_PRINTER = pprint.PrettyPrinter(indent=4)
 
 ROOT = os.path.dirname(os.path.realpath(__file__))
-RESOURCES = '{root}/../resources'.format(root=ROOT)
-OUTPUTS = '{root}/../outputs'.format(root=ROOT)
-COLLECTED = '{root}/../collected-images'.format(root=ROOT)
+RESOURCES = '{root}/../../resources'.format(root=ROOT)
+OUTPUTS = '{root}/../../outputs'.format(root=ROOT)
+COLLECTED = '{root}/../../collected-images'.format(root=ROOT)
 
 CLINICAL_DS = {
   'path': '{RESOURCES}/clinical_ds/jpg'.format(RESOURCES=RESOURCES),
