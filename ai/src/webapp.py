@@ -26,16 +26,18 @@ def rabbitmq_test():
     return 'Success'
 
 
-@app.route('/test_image_upload')
+@app.route('/test_image_upload/', methods = ['POST', 'GET'])
 def test_image():
-    img = cv2.imread('{resources}/clinical_ds/jpg/2.jpg'.format(resources=RESOURCES))
-    encoded = cv2.imencode('.JPEG', img)[1].tostring()
-    template_image = TemplateImage(image=encoded)
-    
-    db.session.add(template_image)
-    db.session.commit()
-    
-    return 'Success'
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        _, encoded = form_data['file'].split(",", 1)
+        data = base64.b64decode(encoded)
+        template_image = TemplateImage(image=data)        
+        db.session.add(template_image)
+        db.session.commit()
+        return 'Success'
+    else:
+        return 'Get'
 
 @app.route('/test_image_show/<page>')
 def test_image_show(page = 1):
