@@ -23,6 +23,8 @@ function App() {
     e.preventDefault();
     const formData = new FormData();
     Object.keys(images).forEach(key => {
+      
+      // reader.addEventListener('load', ()=>{}) TODO add event after file is loaded
       formData.append(key, images[key]);
     });
     const sendData = async () => {
@@ -37,8 +39,13 @@ function App() {
     
   };
 
-  const handleChange = (e) => {
-    setImages({...images, [e.target.name]: e.target.value});
+  const handleFileChange = (e) => {
+    const reader = new FileReader();
+    const file = e.target.files[0];
+    reader.onload = (loadEvent) => {
+      setImages({...images, [e.target.name]: loadEvent.target.result});
+    }
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -56,9 +63,10 @@ function App() {
         <Route path={'/submit'}>
           <div>
             <form ref={formRef}>
-              <input name="file" onChange={handleChange} type="file"/>
+              <input name="file" onChange={handleFileChange} type="file"/>
               <button onClick={sendImages} type="submit">Send files</button>
             </form>
+            {/* <img src={images['file'] === undefined ? '' : images['file']}/> */}
           </div>
         </Route>
       </Switch>
