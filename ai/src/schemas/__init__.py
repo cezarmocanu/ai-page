@@ -3,12 +3,17 @@ from flask_marshmallow import Marshmallow
 ma = Marshmallow()
 
 
+from .TemplateImage import TemplateImageSchema
 from .Option import OptionSchema
 from .Page import PageSchema
-from .OCRAnalysis import OCRAnalysisSchema
-from .Form import FormSchema
+from .TemplateForm import TemplateFormSchema
 from .Topic import TopicSchema
 SCHEMAS={
+    'TemplateImage': {
+        'single': TemplateImageSchema(),
+        'many': TemplateImageSchema(many=True)
+    },
+
     'Option': {
         'single': OptionSchema(),
         'many': OptionSchema(many=True)
@@ -19,14 +24,9 @@ SCHEMAS={
         'many': PageSchema(many=True)
     },
 
-    'OCRAnalysis': {
-        'single': OCRAnalysisSchema(),
-        'many': OCRAnalysisSchema(many=True)
-    },
-
-    'Form': {
-        'single': FormSchema(),
-        'many': FormSchema(many=True)
+    'TemplateForm': {
+        'single': TemplateFormSchema(),
+        'many': TemplateFormSchema(many=True)
     },
 
     'Topic': {

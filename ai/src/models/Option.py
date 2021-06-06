@@ -1,6 +1,4 @@
 from . import db
-
-
 class Option(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(128), nullable=False)

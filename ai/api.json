@@ -1,0 +1,20 @@
+{
+    "paths": [
+        {
+            "post": {
+                "url": "/template",
+                "description": "Submit a formName and an array of images",
+                "type": "multipart/form",
+                "form_example": {
+                    "formName": "Hello Form",
+                    "images": [
+                        {
+                            "filename": "Page 1.jpeg",
+                            "data": "an array containing the image data in a multiform type"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

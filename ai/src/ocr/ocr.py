@@ -323,6 +323,27 @@ def OCR(page_number):
   
   compressed_topics = compress_data(topics)
   return compressed_topics
+
+def create_ocr_analisys(data):
+  img1 = data
+  
+  no_graybox = add(img1, selectGrayboxes(img1))
+  
+  checkbox_mask, checkbox_contours =  selectCheckboxes(no_graybox)
+  no_checkbox_img = add(no_graybox, checkbox_mask)
+  
+  no_lines_img = add(no_checkbox_img, selectLines(no_checkbox_img))
+  
+  boxes = multifilter_word_querry(no_lines_img)
+  
+  text_rows = select_rows(boxes, np.copy(no_lines_img))
+  
+  sentences = splitrows_by_checkboxes(text_rows, checkbox_contours, np.copy(no_graybox))
+  
+  topics = associate_checkboxes(sentences, checkbox_contours, np.copy(no_graybox))
+  
+  compressed_topics = compress_data(topics)
+  return compressed_topics
         
 def init():
   
