@@ -36,7 +36,7 @@ SCHEMAS={
 }
 
 def dump(object):
-    if(type(object).__name__ == 'InstrumentedList'):
+    if(type(object).__name__ == 'InstrumentedList' or type(object).__name__ == 'list'):
         t = type(object[0]).__name__
         return SCHEMAS[t]['many'].dump(object)
     t = type(object).__name__

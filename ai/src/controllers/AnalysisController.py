@@ -8,7 +8,7 @@ from models import *
 AnalysisController = Blueprint('AnalysisController', __name__, url_prefix='/analysis')
 
 @AnalysisController.route('/', methods=('GET', 'POST'))
-def template():
+def analyze():
     if request.method == 'POST':
         body = json.loads(request.data)
         template_form = TemplateForm.query.filter_by(id = body['form_id']).first()
@@ -35,25 +35,45 @@ def template():
             db.session.add(topic)
             page.topics.append(topic)
                 
-        template_form.pages.append(page)
+        # template_form.pages.append(page)
         ###TODO: Refactor so that you don't need to pass fomr_id when initializing page
+        db.session.add(page)
         
         if len(template_form.pages) == len(template_form.images):
             template_form.status = 'ANALYSED'
-            
-        db.session.add(page)
         db.session.commit()
         
         return 'ANALYSIS CREATED'
     else:
-        return 'GET'
-
-
-
-
-
-
-
-
-
-
+        forms = TemplateForm.query.all()
+        
+        output = []
+        
+        for form in forms:
+            form_data = dump(form)
+            form_data['pages'] = len(form.pages)
+            form_data['images'] = len(form.images)
+            output.append(form_data)
+        
+        return jsonify(output)
+    
+@AnalysisController.route('/<form_id>')
+def analysis_get_one(form_id):
+    form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+    output = dump(form)
+    output['pages'] = []
+    
+    for page in form.pages:
+        p = dump(page)
+        topics = []
+        for topic in page.topics:
+            t = dump(topic)
+            options = []
+            for option in topic.options:
+                options.append(dump(option))
+            t['options'] = options
+            topics.append(t)
+        p['topics'] = topics
+        output['pages'].append(p)
+    
+    return jsonify(output)
