@@ -10,7 +10,10 @@ import {
   Link
 } from "react-router-dom";
 
+import {DashboardPage} from './pages/dashboard-page/DashboardPage';
+
 import {VerificationDashboard} from './components/verification-dashboard/VerificationDashboard';
+import {Page} from './components/page/Page';
 
 import './App.scss';
 
@@ -64,10 +67,7 @@ function App() {
     <Router>
       <Switch>
         <Route exact path={'/'}>
-          <div>
-            <Link to="/verification">Verify</Link>
-            <Link to="/submit">Submit</Link>
-          </div>
+          <DashboardPage/>
         </Route>
         <Route path={'/verification'}>
           <VerificationDashboard />

@@ -1,10 +1,34 @@
+$theme-colors: (
+    "primary": #008CBA,
+    "secondary": #EAF1F1,
+    "success": #3EAD68,
+    "danger":#F04124,
+    "dark": #0D0106,
+    "warning": #FAC05E,
+    "info": #00c5cf    
+);
+@import "~bootstrap/scss/bootstrap";
+
 .fluid {
     width: 100%;
     height: 100%
 }
 
+.fluid-w {
+    width: 100%;
+}
+
+.fluid-h {
+    height: 100%
+}
+
 .overflow-hidden{
     overflow-y: hidden;
+}
+
+.flex-vertical-center{
+    display:flex;
+    align-items: center;
 }
 
 .p-relative{

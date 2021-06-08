@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const EDIT_MODES = {
     OBSERVE: 'OBSERVE',
     PAN: 'PAN'
@@ -9,4 +11,40 @@ for(let i =0 ;i<20;i++) {
     RANDOM_COLORS.push(`hsl(${parseInt(Math.random() * 360)},100%,55%)`);
 }
 
-export {EDIT_MODES, RANDOM_COLORS};
+const HOST = 'http://localhost:5000';
+
+const ENDPOINTS = {
+    ANALISYS_ALL: '/analysis/',
+    ANALISYS_ONE: '/analysis/$formId',
+}
+
+const get = async (endpoint, params) => {
+    if (endpoint === undefined) {
+        throw new Error(`Endpoint ${endpoint} does not exist. Either you forgot to define the endpoint or the request was made wrong`);
+    }
+
+    let url = `${HOST}${endpoint}`;
+
+    if (params) {    
+        Object.keys(params).forEach(key => {
+            url = url.split(`$${key}`).join(params[key]);
+        })
+    } 
+
+    if (url.indexOf('$') !== -1) {
+        throw new Error(`Not all parameters filled. For endpoint ${endpoint} you forgot to add parameters or misspelled one of the parameters`);
+    }
+    
+    return await axios.get(url);
+}
+
+const COLORS = {
+    STATUS_COLORS: {
+        NEW: 'info',
+        ANALYSED: 'primary',
+        VERIFIED: 'success'
+    }
+}
+
+
+export {EDIT_MODES, RANDOM_COLORS, COLORS, ENDPOINTS, get};
