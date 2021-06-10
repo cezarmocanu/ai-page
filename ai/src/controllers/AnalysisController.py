@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request,jsonify
+from flask import Blueprint, render_template, request,jsonify,abort, send_file
 import json
 import base64
 from ocr.constants import KEY
+import io
 from schemas import dump
 from models import *
 
@@ -77,3 +78,37 @@ def analysis_get_one(form_id):
         output['pages'].append(p)
     
     return jsonify(output)
+
+@AnalysisController.route('/<form_id>/page/<page_number_str>')
+def analysis_get_one_page(form_id, page_number_str):
+    form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+    page_number = int(page_number_str)
+    
+    if page_number >= len(form.pages):
+        abort(404)
+        
+    page = form.pages[page_number]    
+    output = dump(page)
+    topics = []
+    for topic in page.topics:
+        t = dump(topic)
+        options = []
+        for option in topic.options:
+            options.append(dump(option))
+        t['options'] = options
+        topics.append(t)
+    output['topics'] = topics
+    
+    return jsonify(output)
+
+@AnalysisController.route('/<form_id>/image/<image_number_str>')
+def analysis_get_one_image(form_id, image_number_str):
+    form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+    image_number = int(image_number_str)
+    
+    if image_number >= len(form.images):
+        abort(404)
+        
+    template_image = form.images[image_number]
+    stream = io.BytesIO(template_image.data)
+    return send_file(stream, mimetype='image/JPEG')
