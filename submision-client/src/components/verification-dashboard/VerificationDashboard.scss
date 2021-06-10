@@ -1,0 +1,15 @@
+.verification-dashboard{
+        
+    .page-browse{
+        height: 100%;
+        overflow-y: auto;
+        .page-indicator{
+            margin-top: 50px;
+            margin-bottom: 20px;
+            img{
+                height: auto;
+                width: 100%;
+            }
+        }
+    }
+}

@@ -8,8 +8,10 @@ import {Canvas} from '../canvas/Canvas';
 
 import useImage from '../../hooks/useImage';
 import useResource from '../../hooks/useResource';
+import useFormImageArray from '../../hooks/useFormImageArray';
 import {EDIT_MODES, RANDOM_COLORS} from '../../constants.js';
 
+import './VerificationDashboard.scss';
 
 const CANVAS_CONFIG = {
   WIDTH: 600,
@@ -21,8 +23,10 @@ const CANVAS_CONFIG = {
 function VerificationDashboard() {
 
   const {formId} = useParams();
+  // const [formData, loadedFormData] = useResource(`http://localhost:5000/analysis/${formId}`, {})
   const [image, imageLoaded] = useImage(`http://localhost:5000/analysis/${formId}/image/${0}`);
   const [prediction, predictionLoaded] = useResource(`http://localhost:5000/analysis/${formId}/page/${0}`, []);
+  const [imageArray, imageArrayLoaded] = useFormImageArray(formId);
 
   const [offset ,setOffset] = useState({x:0,y:0});
   const [origin, setOrigin] = useState({x:0, y:0});
@@ -34,7 +38,7 @@ function VerificationDashboard() {
 
   const draw = (ctx, dt) => {
 
-    if (!imageLoaded || !predictionLoaded) {
+    if (!imageLoaded || !predictionLoaded || !imageArrayLoaded) {
       // console.log(imageLoaded)
       return;
       
@@ -42,8 +46,6 @@ function VerificationDashboard() {
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.drawImage(image, offset.x, offset.y);
-
-    // console.log(prediction)
     
     prediction.topics.forEach((pred, index) => {
       const {options} = pred;
@@ -125,7 +127,7 @@ function VerificationDashboard() {
   const createEditModeHandler = (editMode) => (e) => setEditMode(editMode);
   
   return (
-    <Container fluid className="full bg-light p-0"> 
+    <Container fluid className="verification-dashboard full bg-light p-0"> 
       <Row className="full m-0">
         <Col xs={1} className="bg-dark p-2">
           <Nav className="flex-column p-0">
@@ -143,20 +145,32 @@ function VerificationDashboard() {
             </Button>
           </Nav>
         </Col>
-        <Col xs={7} className="d-flex justify-content-center align-items-center">
-            
-          <Canvas
-            editMode={editMode}
-            handlers={{
-              mousemove: mouseMove,
-              mousedown: mouseDown,
-              mouseup: mouseUp,
-              mouseleave: mouseUp
-            }}
-            draw={draw}
-            width={CANVAS_CONFIG.WIDTH}
-            height={CANVAS_CONFIG.HEIGHT}
-          />
+        <Col xs={7} className="d-flex justify-content-center align-items-center h-100">
+            <Row className="h-100">
+                <Col className="page-browse" xs={2}>
+                  {!imageArrayLoaded ? 'loading...' : 
+                    imageArray.map(({image}, index) => 
+                    <div className='page-indicator'>
+                      <img src={image.currentSrc}  />
+                      <span>{index} / </span>
+                    </div>)
+                  }
+                </Col>
+                <Col xs={10}>
+                  <Canvas
+                    editMode={editMode}
+                    handlers={{
+                      mousemove: mouseMove,
+                      mousedown: mouseDown,
+                      mouseup: mouseUp,
+                      mouseleave: mouseUp
+                    }}
+                    draw={draw}
+                    width={CANVAS_CONFIG.WIDTH}
+                    height={CANVAS_CONFIG.HEIGHT}
+                  />
+                </Col>
+            </Row>
         </Col>
         <Col xs={4} className="bg-light full p-relative border-left overflow-hidden">
           <Row className="edit-overlay bg-dark">
