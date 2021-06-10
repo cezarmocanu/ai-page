@@ -124,12 +124,12 @@ def analysis_get_one_page(form_id, page_number_str):
 def analysis_get_one_image(form_id, image_number_str):
     form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
     image_number = int(image_number_str)
-    
+
     if image_number >= len(form.images):
         abort(404)
     
     template_image = form.images[image_number]
     aspect = request.args.get('aspect')
-    stream = resize_image(aspect, io.BytesIO(io.BytesIO(template_image.data)))
+    stream = resize_image(aspect, io.BytesIO(template_image.data))
     
     return send_file(stream, mimetype='image/JPEG')
