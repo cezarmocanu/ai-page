@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 
-const useResource = (url) => {
+const useResource = (url, defaultValue = []) => {
     const [loaded, setLoaded] = useState(false);
-    const [resource, setResource] = useState([]);
+    const [resource, setResource] = useState(defaultValue);
 
     useEffect(()=> {
         const fetchResource = async () => {

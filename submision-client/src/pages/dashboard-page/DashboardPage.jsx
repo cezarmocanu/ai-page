@@ -7,8 +7,6 @@ import {Page} from '../../components/page/Page';
 import {get, ENDPOINTS, COLORS} from '../../constants';
 
 function DashboardPage() {
-
-    const [loop, setLoop] = useState(null);
     const [analyses, setAnalysis] = useState([]);
 
     const fetchData = async () => {
@@ -17,10 +15,10 @@ function DashboardPage() {
     }
 
     useEffect(()=>{
-        setLoop(setInterval(fetchData, 5000));
+        const interval = setInterval(fetchData, 5000);
         fetchData();
         return () => {
-            clearInterval(loop);
+            clearInterval(interval);
         }
     }, [])
 

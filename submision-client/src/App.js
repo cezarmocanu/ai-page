@@ -69,7 +69,7 @@ function App() {
         <Route exact path={'/'}>
           <DashboardPage/>
         </Route>
-        <Route path={'/verification'}>
+        <Route path={'/verification/:formId'}>
           <VerificationDashboard />
         </Route>
         <Route path={'/submit'}>

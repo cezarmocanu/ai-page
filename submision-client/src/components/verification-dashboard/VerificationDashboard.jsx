@@ -1,4 +1,5 @@
 import React, {useState}  from 'react';
+import {useParams} from 'react-router-dom';
 import {Container, Nav, Row, Col, Button, ListGroup, Alert} from 'react-bootstrap';
 import {BsArrowsMove, BsEyeFill} from 'react-icons/bs';
 
@@ -19,8 +20,9 @@ const CANVAS_CONFIG = {
 
 function VerificationDashboard() {
 
-  const [image, imageLoaded] = useImage('http://localhost:5000/image/0');
-  const [prediction, predictionLoaded] = useResource('http://localhost:5000/ocr/0');
+  const {formId} = useParams();
+  const [image, imageLoaded] = useImage(`http://localhost:5000/analysis/${formId}/image/${0}`);
+  const [prediction, predictionLoaded] = useResource(`http://localhost:5000/analysis/${formId}/page/${0}`, []);
 
   const [offset ,setOffset] = useState({x:0,y:0});
   const [origin, setOrigin] = useState({x:0, y:0});
@@ -33,21 +35,22 @@ function VerificationDashboard() {
   const draw = (ctx, dt) => {
 
     if (!imageLoaded || !predictionLoaded) {
+      // console.log(imageLoaded)
       return;
+      
     }
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.drawImage(image, offset.x, offset.y);
 
+    // console.log(prediction)
     
-    
-    prediction.forEach((pred, index) => {
-      const {INPUTS} = pred;
+    prediction.topics.forEach((pred, index) => {
+      const {options} = pred;
 
       ctx.fillStyle = RANDOM_COLORS[index % RANDOM_COLORS.length];
-      INPUTS.forEach(input => {
-          const {CHECKBOX} = input;
-          const [x, y, w, h] = CHECKBOX;
+      options.forEach(option => {
+          const {x, y, w, h} = option;
           ctx.fillRect(offset.x + x,offset.y + y,w,h);
       });
 
@@ -176,7 +179,7 @@ function VerificationDashboard() {
           }
           </Row>
           <ListGroup className="prediction-list">
-            {prediction.map(pred => <EditableItem onSelect={onSelect} prediction={pred} />)}
+            {prediction.topics && prediction.topics.map(pred => <EditableItem onSelect={onSelect} prediction={pred} />)}
           </ListGroup>
         </Col>
         
