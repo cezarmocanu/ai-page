@@ -1,12 +1,31 @@
 from flask import Blueprint, render_template, request,jsonify,abort, send_file
 import json
 import base64
+from PIL import Image
 from ocr.constants import KEY
 import io
 from schemas import dump
 from models import *
 
 AnalysisController = Blueprint('AnalysisController', __name__, url_prefix='/analysis')
+
+def resize_image(aspect_string, image_stream):
+    try:
+        aspect = int(aspect_string)
+    except:
+        return image_stream
+
+    image = Image.open(image_stream)
+    width, height = image.size
+    width *= aspect / 100
+    height *= aspect / 100
+    image.thumbnail((width, height), Image.ANTIALIAS)
+    stream = io.BytesIO()
+    image.save(stream, format='JPEG')
+    stream.seek(0)
+    
+    return stream
+    
 
 @AnalysisController.route('/', methods=('GET', 'POST'))
 def analyze():
@@ -108,7 +127,9 @@ def analysis_get_one_image(form_id, image_number_str):
     
     if image_number >= len(form.images):
         abort(404)
-        
+    
     template_image = form.images[image_number]
-    stream = io.BytesIO(template_image.data)
+    aspect = request.args.get('aspect')
+    stream = resize_image(aspect, io.BytesIO(io.BytesIO(template_image.data)))
+    
     return send_file(stream, mimetype='image/JPEG')
