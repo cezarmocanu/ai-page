@@ -12,7 +12,7 @@ const useResource = (url, defaultValue = []) => {
             setLoaded(true);
         }
         fetchResource();
-    },[])
+    },[url])
 
     return [resource, loaded];
 };

@@ -38,6 +38,26 @@ const get = async (endpoint, params) => {
     return await axios.get(url);
 }
 
+const post = async (endpoint, params, body) => {
+    if (endpoint === undefined) {
+        throw new Error(`Endpoint ${endpoint} does not exist. Either you forgot to define the endpoint or the request was made wrong`);
+    }
+
+    let url = `${HOST}${endpoint}`;
+
+    if (params) {    
+        Object.keys(params).forEach(key => {
+            url = url.split(`$${key}`).join(params[key]);
+        })
+    } 
+
+    if (url.indexOf('$') !== -1) {
+        throw new Error(`Not all parameters filled. For endpoint ${endpoint} you forgot to add parameters or misspelled one of the parameters`);
+    }
+    
+    return await axios.post(url, body);
+}
+
 const COLORS = {
     STATUS_COLORS: {
         NEW: 'info',
@@ -47,4 +67,4 @@ const COLORS = {
 }
 
 
-export {EDIT_MODES, RANDOM_COLORS, COLORS, ENDPOINTS, get};
+export {EDIT_MODES, RANDOM_COLORS, COLORS, ENDPOINTS, get, post};

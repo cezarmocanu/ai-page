@@ -1,8 +1,18 @@
+@import "../../Variabiles.scss";
+
 .editable-label{
     font-size:0.8rem;
     cursor: pointer;
+    
 
     .alert{
         padding:0.3rem;
+        border: 1px solid $hover-color;
+        color: $dark;
+
+        &.selected {
+            background-color: $selected-color;
+            color: $white;
+        }
     }
 }

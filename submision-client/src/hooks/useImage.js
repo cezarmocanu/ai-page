@@ -18,7 +18,7 @@ const useImage = (url) => {
             setImage(img);
         }
         fetchImage();
-    }, []);
+    }, [url]);
 
 
 

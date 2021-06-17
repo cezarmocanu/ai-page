@@ -1,9 +1,12 @@
 import React, {useState}  from 'react';
 import {useParams} from 'react-router-dom';
-import {Container, Nav, Row, Col, Button, ListGroup, Alert} from 'react-bootstrap';
+import {Container, Nav, Row, Col, Button, ListGroup} from 'react-bootstrap';
+import {BiArrowBack} from 'react-icons/bi';
 import {BsArrowsMove, BsEyeFill} from 'react-icons/bs';
 
 import {EditableItem} from '../editable-item/EditableItem';
+import {EditableLabel} from '../editable-label/EditableLabel';
+import {PropertyEditForm} from '../property-edit-form/PropertyEditForm';
 import {Canvas} from '../canvas/Canvas';
 
 import useImage from '../../hooks/useImage';
@@ -20,21 +23,26 @@ const CANVAS_CONFIG = {
   DRAG_SPEED_Y: 30
 };
 
+const {TOPIC, OPTION} = EditableLabel.TYPES;
+
 function VerificationDashboard() {
 
   const {formId} = useParams();
   // const [formData, loadedFormData] = useResource(`http://localhost:5000/analysis/${formId}`, {})
-  const [image, imageLoaded] = useImage(`http://localhost:5000/analysis/${formId}/image/${0}`);
-  const [prediction, predictionLoaded] = useResource(`http://localhost:5000/analysis/${formId}/page/${0}`, []);
+  const [selectedImageId, setSelectedImageId] = useState(0);
+  const [selectedOption, setSelectedOption] = useState({});
+  
+  const [image, imageLoaded] = useImage(`http://localhost:5000/analysis/${formId}/image/${selectedImageId}`);
+  const [prediction, predictionLoaded] = useResource(`http://localhost:5000/analysis/${formId}/page/${selectedImageId}`, []);
   const [imageArray, imageArrayLoaded] = useFormImageArray(formId);
 
-  const [offset ,setOffset] = useState({x:0,y:0});
-  const [origin, setOrigin] = useState({x:0, y:0});
+  const [offset ,setOffset] = useState({x: 0, y: 0});
+  const [origin, setOrigin] = useState({x: 0, y: 0});
   const [editMode, setEditMode] = useState(EDIT_MODES.OBSERVE);
   const [isDragging, setIsDragging] = useState(false);
-  const [rerender, setRerender] = useState(true);//set rerender using only one setState
+  // const [rerender, setRerender] = useState(true);//set rerender using only one setState
 
-  const [editedValue, setEditedValue] = useState("null");
+  // const [editedValue, setEditedValue] = useState();
 
   const draw = (ctx, dt) => {
 
@@ -47,17 +55,21 @@ function VerificationDashboard() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.drawImage(image, offset.x, offset.y);
     
-    prediction.topics.forEach((pred, index) => {
-      const {options} = pred;
+    if (selectedOption.type === OPTION) {
+      ctx.fillStyle = '#00c5cf';
+      const {x, y, w, h} = selectedOption;
+      ctx.fillRect(offset.x + x,offset.y + y,w,h);
+    }
+    // prediction.topics.forEach((pred, index) => {
+    //   const {options} = pred;
 
-      ctx.fillStyle = RANDOM_COLORS[index % RANDOM_COLORS.length];
-      options.forEach(option => {
-          const {x, y, w, h} = option;
-          ctx.fillRect(offset.x + x,offset.y + y,w,h);
-      });
+    //   ctx.fillStyle = RANDOM_COLORS[index % RANDOM_COLORS.length];
+    //   options.forEach(option => {
+    //       const {x, y, w, h} = option;
+    //       ctx.fillRect(offset.x + x,offset.y + y,w,h);
+    //   });
 
-    });
-   
+    // });
   };
 
   const panImage = (e) => {
@@ -99,60 +111,83 @@ function VerificationDashboard() {
     
     }
     else {
-      // console.log("mouse move")
+      // console.log('mouse move')
     }
     
   };
 
   const mouseDown = (e) => {
     setIsDragging(true);
-    setOrigin({x:e.offsetX, y:e.offsetY});
+    setOrigin({x: e.offsetX, y: e.offsetY});
   };
 
   const mouseUp = (e) => {
     setIsDragging(false);
   };
 
+  const onSelect = (value, type) => {
 
+    if (type === TOPIC) {
+      const {options, ...topic} = value;
+      setSelectedOption({...topic, type: TOPIC});
+    }
+    else if (type === OPTION){
+      const {x, y} = value;
 
-  const onSelect = (value) => {
-    setEditedValue(value);
+      setSelectedOption({...value, type: OPTION});
+
+      setOffset({
+        x: CANVAS_CONFIG.WIDTH * 1 / 4 - x, 
+        y: CANVAS_CONFIG.HEIGHT / 2 - y
+      });
+    }
   };
 
   const onCancelEdit = (e) => {
     e.preventDefault();
-    setEditedValue(false);
-  }
+    setSelectedOption({});
+  };
+
+  const handleBrowseItemClick = (index) => () => {
+    setSelectedImageId(index);
+    setSelectedOption({});
+  };
 
   const createEditModeHandler = (editMode) => (e) => setEditMode(editMode);
   
   return (
-    <Container fluid className="verification-dashboard full bg-light p-0"> 
-      <Row className="full m-0">
-        <Col xs={1} className="bg-dark p-2">
-          <Nav className="flex-column p-0">
+    <Container fluid className='verification-dashboard full bg-light p-0'> 
+      <Row className='full m-0'>
+        <Col xs={1} className='bg-dark p-2'>
+          <Nav className='flex-column p-0'>
+            <Button
+              href='/'
+              className='mb-2'
+              variant='secondary'>
+                <BiArrowBack/>  
+            </Button>
             <Button
               onClick={createEditModeHandler(EDIT_MODES.OBSERVE)}
-              className="mb-2"
-              variant={editMode === EDIT_MODES.OBSERVE ? 'info' : 'success'}>
+              className='mb-2'
+              variant={editMode === EDIT_MODES.OBSERVE ? 'info' : 'secondary'}>
               <BsEyeFill/>  
             </Button>
             <Button
               onClick={createEditModeHandler(EDIT_MODES.PAN)}
-              className="mb-2"
-              variant={editMode === EDIT_MODES.PAN ? 'info' : 'success'}>
+              className='mb-2'
+              variant={editMode === EDIT_MODES.PAN ? 'info' : 'secondary'}>
               <BsArrowsMove/>  
             </Button>
           </Nav>
         </Col>
-        <Col xs={7} className="d-flex justify-content-center align-items-center h-100">
-            <Row className="h-100">
-                <Col className="page-browse" xs={2}>
+        <Col xs={7} className='d-flex justify-content-center align-items-center h-100'>
+            <Row className='h-100'>
+                <Col className='page-browse' xs={2}>
                   {!imageArrayLoaded ? 'loading...' : 
                     imageArray.map(({image}, index) => 
-                    <div className='page-indicator'>
-                      <img src={image.currentSrc}  />
-                      <span>{index} / </span>
+                    <div key={`$browse-item-${index}`} onClick={handleBrowseItemClick(index)} className={`page-indicator ${index === selectedImageId && 'selected'}`}>
+                      <img src={image.currentSrc} alt=''/>
+                      <span>{index + 1} / {imageArray.length} </span>
                     </div>)
                   }
                 </Col>
@@ -172,28 +207,10 @@ function VerificationDashboard() {
                 </Col>
             </Row>
         </Col>
-        <Col xs={4} className="bg-light full p-relative border-left overflow-hidden">
-          <Row className="edit-overlay bg-dark">
-          {editedValue ?
-            <React.Fragment>
-              <Col xs={12} className="mb-2">
-                <textarea className="fluid" value={editedValue} />
-              </Col>
-              <Col xs={6}>
-                <Button className='fluid' variant="info">Save</Button>
-              </Col>
-              <Col xs={6}>
-                <Button className='fluid' variant="danger" onClick={onCancelEdit}>Cancel</Button>
-              </Col>
-            </React.Fragment>
-            :
-            <Col xs={12} className="mb-2">
-              <Alert className="m-0" variant="secondary">Click on any label to toggle edit</Alert>
-            </Col>
-          }
-          </Row>
-          <ListGroup className="prediction-list">
-            {prediction.topics && prediction.topics.map(pred => <EditableItem onSelect={onSelect} prediction={pred} />)}
+        <Col xs={4} className='bg-light full p-relative border-left overflow-hidden'>
+          <PropertyEditForm onCancelEdit={onCancelEdit} selectedOption={selectedOption} />
+          <ListGroup className='prediction-list'>
+            {prediction.topics && prediction.topics.map((pred, index) => <EditableItem key={`editable-item-${index}`} onSelect={onSelect} prediction={pred} selectedOption={selectedOption} />)}
           </ListGroup>
         </Col>
         
