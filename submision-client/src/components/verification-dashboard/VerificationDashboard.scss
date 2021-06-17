@@ -1,6 +1,28 @@
 @import "../../Variabiles.scss";
 
 
+@keyframes select-browse-item {
+    0%   {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1.1);
+        background-color: $selected-color;
+    }
+}
+
+
+@keyframes hover-browse-item {
+    0%   {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0.9);
+        background-color: $hover-color;
+        -webkit-box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6); 
+        box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6);
+    }
+}
 
 .verification-dashboard{
     .page-browse{
@@ -29,8 +51,14 @@
                 border: 1px solid $hover-color;
                 -webkit-box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6); 
                 box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6);
+
+                animation-name: hover-browse-item;
+                animation-duration: 0.1s;
+                animation-timing-function: ease-in;
+                transform: scale(0.9);
             }
 
+            
             &.selected {
                 cursor: pointer;
                 box-sizing: border-box;
@@ -38,6 +66,12 @@
                 border: 1px solid $selected-color;
                 -webkit-box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6); 
                 box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6);
+
+                animation-name: select-browse-item;
+                animation-duration: 0.2s;
+                animation-timing-function: ease-out;
+                transform: scale(1.1);
+            
             }
         }
     }
