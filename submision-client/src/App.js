@@ -15,8 +15,6 @@ import {DashboardPage} from './pages/dashboard-page/DashboardPage';
 import {VerificationDashboard} from './components/verification-dashboard/VerificationDashboard';
 import {Page} from './components/page/Page';
 
-import './App.scss';
-
 const COLLECTOR_ROUTE = 'http://localhost:5000/template/'
 
 function App() {

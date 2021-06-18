@@ -23,7 +23,7 @@ function EditableItem({prediction, onSelect, selectedOption}) {
     const {TOPIC, OPTION} = EditableLabel.TYPES;
 
     return (
-        <ListGroup.Item className="mb-1 bg-light text-white border" as="li" >
+        <ListGroup.Item className="mb-1 bg-white text-white p-2" as="li" >
           <Row>
             <Col xs={12} className="mb-1 text-primary">Statement:</Col>
             <Col xs={12} className="mb-1">
@@ -47,6 +47,7 @@ function EditableItem({prediction, onSelect, selectedOption}) {
               })
             }
           </Row>
+          <hr/>
         </ListGroup.Item>
       );
 }

@@ -5,6 +5,8 @@ import {EditableLabel} from '../editable-label/EditableLabel';
 
 import {post} from '../../constants';
 
+import './PropertyEditForm.scss';
+
 function PropertyEditForm({selectedOption, onCancelEdit, onSave}) {
     const {TOPIC} = EditableLabel.TYPES;
 

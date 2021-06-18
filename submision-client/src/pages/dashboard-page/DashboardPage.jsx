@@ -9,7 +9,7 @@ import {AiOutlineFileImage} from 'react-icons/ai';
 
 import {Page} from '../../components/page/Page';
 
-import {get, ENDPOINTS, COLORS} from '../../constants';
+import {get, ENDPOINTS} from '../../constants';
 
 const STATUS_ICON_MAP = {
     NEW: {
@@ -43,6 +43,7 @@ const BUTTON_MAPPING = {
 
 function DashboardPage() {
     const [analyses, setAnalysis] = useState([]);
+    const [activeFilter, setActiveFilter] = useState('');
 
     const fetchData = async () => {
         const results = await get(ENDPOINTS.ANALISYS_ALL);
@@ -86,7 +87,7 @@ function DashboardPage() {
         const StatusIcon = STATUS_ICON_MAP[status].Component;
         const iconColor = STATUS_ICON_MAP[status].color;
         return (
-            <Col xs={2} className='flex'>
+            <Col xs={2} className='flex mb-4'>
                 <Card>
                     <Card.Body>
                         <Card.Title>{title} <StatusIcon className={`ml-2 mb-2 text-${iconColor}`}/></Card.Title>
@@ -129,18 +130,24 @@ function DashboardPage() {
         const {images, pages, newForms, analysedForms, verifiedForms} = counts;
 
         return (
-            <Col xs={12} className='mb-4 p-4 border border-secondary'>
+            <Col xs={12} className='mb-4 p-4 border border-white bg-white text-dark'>
                 <Row>
                     <Col xs={12} className='mb-4'>
                         <h2>OVERVIEW</h2>
                     </Col>
                     <Col xs={4}>
                         <Row>
-                            <Col xs={12} className='mb-2'>
+                            <Col xs={12} className='mb-4'>
                                 <h5>PAGES & IMAGES</h5>
                             </Col>
+                            <Col xs={12} className='mb-4'>
+                                <ProgressBar>
+                                    <ProgressBar max={images} variant="success" now={images} key={1} />
+                                    <ProgressBar max={images-pages} variant="warning" now={pages} key={2} />
+                                </ProgressBar>
+                            </Col>
                             <Col xs={6}>
-                                <h6>Form images: {images} <ImSpinner4 className='mb-2 ml-1'/> </h6>
+                                <h6>Total images: {images} <ImSpinner4 className='mb-2 ml-1'/> </h6>
                             </Col>
                             <Col xs={6}>
                                 <h6>Analysed pages: {pages} <AiOutlineFileImage className='mb-1 ml-1'/> </h6>
@@ -150,6 +157,13 @@ function DashboardPage() {
                     <Col xs={{span:6, offset:2}}>
                         <Row>
                             <Col xs={12} className='mb-2'><h5>FORMS</h5></Col>
+                            <Col xs={12} className='mb-4'>
+                                <ProgressBar>
+                                    <ProgressBar max={newForms} variant="info" now={newForms} key={4} />
+                                    <ProgressBar max={analysedForms} variant="warning" now={analysedForms} key={5} />
+                                    <ProgressBar max={verifiedForms} variant="success" now={verifiedForms} key={6} />
+                                </ProgressBar>
+                            </Col>
                             <Col xs={4}>
                                 <h6>NEW: {newForms} <STATUS_ICON_MAP.NEW.Component className={`mb-2 ml-1 text-${STATUS_ICON_MAP.NEW.color}`}/></h6>
                                 
@@ -172,19 +186,16 @@ function DashboardPage() {
 
     return (
         <Page>
-            <Row className='bg-dark flex-vertical-center p-4'>
+            <Row className='bg-primary flex-vertical-center p-4'>
                 <Col>
                     <Link to="/submit">
-                        <Button variant='primary'>Submit new form</Button>
+                        <Button variant='primary' className='border-white'>Submit New Form</Button>
                     </Link>
                 </Col>
-                <Col>
-                    <Alert  className='m-0' variant='info'>Below are your analized forms</Alert>
-                </Col>
             </Row>
-            <Row className='fluid-w p-4'>
+            <Row className='fluid-w p-4 pb-5 bg-light m-0'>
                 {renderDashboardOverview()}
-                <Col xs={12} className='p-4 border border-secondary'>
+                <Col xs={12} className='p-4 border border-white bg-white text-dark'>
                     <Row>
                         <Col xs={12} className='mb-4'><h2>ANALYSES</h2></Col>
                         {ANALYSES}    

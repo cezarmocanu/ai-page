@@ -1,13 +1,25 @@
 $theme-colors: (
-    "primary": #008CBA,
-    "secondary": #EAF1F1,
+    "primary": #0060af,
     "success": #3EAD68,
     "danger":#F04124,
-    "dark": #0D0106,
+    "dark": #3b3b3b,
     "warning": #FAC05E,
-    "info": #00c5cf    
+    "info": #29b0ff    
 );
+
+$primary: #0060af;
+
+$success: #3EAD68;
+$danger:#F04124;
+$dark: #3b3b3b;
+$warning: #FAC05E;
+$info: #29b0ff;
+$light: #eaeaea;
+
 @import "~bootstrap/scss/bootstrap";
+// @import "./Variabiles.scss";
+$hover-color: lighten($secondary, 35%);
+$selected-color: $info;
 
 .fluid {
     width: 100%;
@@ -37,21 +49,4 @@ $theme-colors: (
 
 
 /*TODO : de separat*/
-.edit-overlay{
-    padding:0.5rem;
-    position: absolute;
-    z-index: 10;
-    width:100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
 
-.prediction-list{
-    overflow-y: auto;
-    height: 100%;
-    margin-top: 8rem;
-    padding-bottom: 8rem;
-
-}

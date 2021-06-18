@@ -1,0 +1,10 @@
+.edit-overlay{
+    padding:0.5rem;
+    position: absolute;
+    z-index: 10;
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

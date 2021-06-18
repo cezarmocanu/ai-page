@@ -156,7 +156,7 @@ function VerificationDashboard() {
   const createEditModeHandler = (editMode) => (e) => setEditMode(editMode);
   
   return (
-    <Container fluid className='verification-dashboard full bg-light p-0'> 
+    <Container fluid className='verification-dashboard full bg-white p-0'> 
       <Row className='full m-0'>
         <Col xs={1} className='bg-dark p-2'>
           <Nav className='flex-column p-0'>
@@ -207,8 +207,9 @@ function VerificationDashboard() {
                 </Col>
             </Row>
         </Col>
-        <Col xs={4} className='bg-light full p-relative border-left overflow-hidden'>
+        <Col xs={4} className='bg-white full p-relative border-left overflow-hidden'>
           <PropertyEditForm onCancelEdit={onCancelEdit} selectedOption={selectedOption} />
+          
           <ListGroup className='prediction-list'>
             {prediction.topics && prediction.topics.map((pred, index) => <EditableItem key={`editable-item-${index}`} onSelect={onSelect} prediction={pred} selectedOption={selectedOption} />)}
           </ListGroup>

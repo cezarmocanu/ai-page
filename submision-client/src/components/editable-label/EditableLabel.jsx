@@ -18,10 +18,10 @@ function EditableLabel({label, onSelect, selected}){
         }
 
         if (visited) {
-            return 'dark';
+            return 'secondary';
         }
 
-        return 'secondary';
+        return 'light';
     };
 
     return (
