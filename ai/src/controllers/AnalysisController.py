@@ -161,19 +161,28 @@ def analysis_verify_data():
     entity.verified = True  
     db.session.commit()
     
+    return 'success'
+    
+
+@AnalysisController.route('/update', methods=['PUT'])
+def analysis_update_data():
+    # form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+    
+    ##TODO verify if body is ok
+    id = int(request.json['id'])
+    entity_type = request.json['type']
+    value = request.json['value']
+    
+    if entity_type == 'OPTION':
+        option = Option.query.filter_by(id = id).first_or_404(description='Entity does not exist')    
+        option.verified = True
+        option.label = value
         
+    if entity_type == 'TOPIC':
+        topic = Topic.query.filter_by(id = id).first_or_404(description='Entity does not exist')
+        topic.verified = True
+        topic.title = value
     
-    return entity_type
-    
-    # data = request.json
-    # value_type = data['type']
-    # value = data['type']
-    
-    # if value_type == 'OPTION':
-    #     option = 
-    # elif value_type == 'TOPIC':
-        
-    
-    # return 'ok'
-    
-    
+    ##TODO automatic verified for bigger entities
+    db.session.commit()
+    return 'success'
