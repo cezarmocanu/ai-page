@@ -4,3 +4,14 @@ Content-Type: 'application/json'
 {
     "a":5
 }
+
+
+###
+
+PUT http://localhost:5000/analysis/verify
+Content-Type: application/json
+
+{
+    "id": 1,
+    "type": "TOPIC"
+}

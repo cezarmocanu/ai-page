@@ -133,3 +133,47 @@ def analysis_get_one_image(form_id, image_number_str):
     stream = resize_image(aspect, io.BytesIO(template_image.data))
     
     return send_file(stream, mimetype='image/JPEG')
+
+@AnalysisController.route('/verify', methods=['PUT'])
+def analysis_verify_data():
+    # form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+    
+    ##TODO verify if body is ok
+    id = int(request.json['id'])
+    entity_type = request.json['type']
+    
+    Model = None
+    
+    if entity_type == 'OPTION':
+        Model = Option
+    if entity_type == 'TOPIC':
+        Model = Topic
+    if entity_type == 'PAGE':
+        Model = Page
+
+    entity = Model.query.filter_by(id = id).first_or_404(description='Entity does not exist')    
+
+    ##TODO automatic verified for bigger entities
+    
+    if entity == None:
+        return 'Entity could not be found'
+    
+    entity.verified = True  
+    db.session.commit()
+    
+        
+    
+    return entity_type
+    
+    # data = request.json
+    # value_type = data['type']
+    # value = data['type']
+    
+    # if value_type == 'OPTION':
+    #     option = 
+    # elif value_type == 'TOPIC':
+        
+    
+    # return 'ok'
+    
+    

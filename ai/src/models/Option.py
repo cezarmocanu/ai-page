@@ -7,3 +7,4 @@ class Option(db.Model):
     w = db.Column(db.Integer, nullable=False)
     h = db.Column(db.Integer, nullable=False)
     topic_id = db.Column(db.Integer, db.ForeignKey('topic.id'), nullable=False)
+    verified = db.Column(db.Boolean, default = False, nullable=False)
