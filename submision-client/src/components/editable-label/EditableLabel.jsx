@@ -1,32 +1,35 @@
 import React,{useState, useEffect} from 'react';
 import {Alert} from 'react-bootstrap';
+import {FiCheckCircle} from 'react-icons/fi';
+
 import './EditableLabel.scss';
 
-function EditableLabel({label, onSelect, selected}){
-
-    const [visited, setVisited] = useState(false);
-
-    useEffect(()=>{
-        if (selected && !visited) {
-            setVisited(true);
-        }
-    },[selected])
-
+function EditableLabel({label, onSelect, selected, verified}){
     const getLabelStyle = () => {
         if (selected) {
             return 'info';
         }
 
-        if (visited) {
-            return 'secondary';
-        }
-
         return 'light';
+    };
+
+    const renderVerification = () => {
+        if (verified) {
+            return (
+                <div className='verification-box'>
+                    <FiCheckCircle/>
+                </div>
+            );
+        }
+        return null;
     };
 
     return (
         <div className="editable-label">
-            <Alert variant={getLabelStyle()} onClick={onSelect} className='fluid' >{label}</Alert>
+            <Alert variant={getLabelStyle()} onClick={onSelect} className='fluid' >
+                {renderVerification()}
+                <span>{label}</span>
+            </Alert>
         </div>
     )
 }

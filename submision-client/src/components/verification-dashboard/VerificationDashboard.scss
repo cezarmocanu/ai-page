@@ -27,11 +27,13 @@
 .verification-dashboard{
 
     .prediction-list{
-        border-top: 1px solid lighten($secondary, 30%);
+       // border-top: 1px solid lighten($secondary, 30%);
         overflow-y: auto;
         height: 100%;
+        overflow-x: hidden;
         margin-top: 8rem;
         padding-bottom: 8rem;
+        
     
     }
 

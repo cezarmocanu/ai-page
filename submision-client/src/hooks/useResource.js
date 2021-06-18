@@ -14,7 +14,7 @@ const useResource = (url, defaultValue = []) => {
         fetchResource();
     },[url])
 
-    return [resource, loaded];
+    return [resource, loaded, setResource];
 };
 
 export default useResource;

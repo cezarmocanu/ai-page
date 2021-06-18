@@ -5,7 +5,7 @@ import './EditableItem.scss';
 
 function EditableItem({prediction, onSelect, selectedOption}) {
     
-    const {title, options} = prediction;
+    const {title, options, verified:formVerified} = prediction;
 
     const isSelected = (value, type) => {
       return selectedOption.id === value.id && selectedOption.type === type;
@@ -23,25 +23,27 @@ function EditableItem({prediction, onSelect, selectedOption}) {
     const {TOPIC, OPTION} = EditableLabel.TYPES;
 
     return (
-        <ListGroup.Item className="mb-1 bg-white text-white p-2" as="li" >
+        <ListGroup.Item className="mb-1 mt-2 bg-white text-white border-0 p-2" as="li" >
           <Row>
             <Col xs={12} className="mb-1 text-primary">Statement:</Col>
             <Col xs={12} className="mb-1">
               <EditableLabel
                 key={`${TOPIC}-${prediction.id}`}
                 label={title} 
+                verified={formVerified}
                 {...commonProps(prediction, TOPIC)}
               />
             </Col>
             <Col xs={12} className="mb-1 text-primary">Options:</Col>
             {
               options.map((option) => {
-                const {label} = option;
+                const {label, verified} = option;
                 return (
-                <Col key={`topic-option-${option.id}`} xs={4}>
+                <Col key={`topic-option-${option.id}`} xs={12}>
                   <EditableLabel 
                     label={label}
-                    {...commonProps(option, OPTION)}
+                    verified={verified}
+                    {...commonProps({...option, topicId: prediction.id}, OPTION)}
                   />
                 </Col>);
               })

@@ -46,7 +46,7 @@ function DashboardPage() {
     const [activeFilter, setActiveFilter] = useState('');
 
     const fetchData = async () => {
-        const results = await get(ENDPOINTS.ANALISYS_ALL);
+        const results = await get(ENDPOINTS.ANALYSIS_ALL);
         setAnalysis(results.data);
     }
 

@@ -33,7 +33,7 @@ function VerificationDashboard() {
   const [selectedOption, setSelectedOption] = useState({});
   
   const [image, imageLoaded] = useImage(`http://localhost:5000/analysis/${formId}/image/${selectedImageId}`);
-  const [prediction, predictionLoaded] = useResource(`http://localhost:5000/analysis/${formId}/page/${selectedImageId}`, []);
+  const [prediction, predictionLoaded, setPrediction] = useResource(`http://localhost:5000/analysis/${formId}/page/${selectedImageId}`, []);
   const [imageArray, imageArrayLoaded] = useFormImageArray(formId);
 
   const [offset ,setOffset] = useState({x: 0, y: 0});
@@ -148,6 +148,99 @@ function VerificationDashboard() {
     setSelectedOption({});
   };
 
+  const onMarkAsChecked = (e) => {
+    e.preventDefault();
+    const {type} = selectedOption;
+
+    if (type === TOPIC) {
+      const {topics} = prediction;
+      const index = topics.findIndex(pred => pred.id === selectedOption.id);
+      const pre = topics.slice(0, index);
+      const post = topics.slice(index + 1);
+      const newTopics = [...pre, {...topics[index], verified: true}, ...post];
+      setPrediction({...prediction, topics: newTopics});
+    }
+
+    if (type === OPTION) {
+      const {topics} = prediction;
+      const topicIndex = topics.findIndex(pred => pred.id === selectedOption.topicId);
+      const topicPre = topics.slice(0, topicIndex);
+      const topicPost = topics.slice(topicIndex + 1);
+
+      const topic = topics[topicIndex];
+
+      const optionIndex = topic.options.findIndex(opt => opt.id === selectedOption.id);
+      const optionPre = topic.options.slice(0, optionIndex);
+      const optionPost = topic.options.slice(optionIndex + 1);
+
+      const newOptions = [...optionPre, {...topic.options[optionIndex], verified: true}, ...optionPost];
+
+      const newTopics = [...topicPre, {...topic, options: newOptions}, ...topicPost];
+      setPrediction({...prediction, topics: newTopics});
+    }
+
+    setSelectedOption({});
+
+  };
+
+  const onSaveModification = (updatedValue) => {
+    const {type} = selectedOption;
+
+    if (type === TOPIC) {
+      const {topics} = prediction;
+      const index = topics.findIndex(pred => pred.id === selectedOption.id);
+      const pre = topics.slice(0, index);
+      const post = topics.slice(index + 1);
+      const newTopics = [
+          ...pre, 
+          {
+            ...topics[index],
+            title: updatedValue,
+            verified: true
+          },
+          ...post
+      ];
+
+      setPrediction({...prediction, topics: newTopics});
+    }
+
+    if (type === OPTION) {
+      const {topics} = prediction;
+      const topicIndex = topics.findIndex(pred => pred.id === selectedOption.topicId);
+      const topicPre = topics.slice(0, topicIndex);
+      const topicPost = topics.slice(topicIndex + 1);
+
+      const topic = topics[topicIndex];
+
+      const optionIndex = topic.options.findIndex(opt => opt.id === selectedOption.id);
+      const optionPre = topic.options.slice(0, optionIndex);
+      const optionPost = topic.options.slice(optionIndex + 1);
+
+      const newOptions = [
+        ...optionPre, 
+        {
+          ...topic.options[optionIndex],
+          label: updatedValue,
+          verified: true
+        },
+        ...optionPost
+      ];
+
+      const newTopics = [
+        ...topicPre, 
+        {
+          ...topic,
+          options: newOptions
+        },
+        ...topicPost
+      ];
+      
+      setPrediction({...prediction, topics: newTopics});
+    }
+    setSelectedOption({});
+
+  };
+
   const handleBrowseItemClick = (index) => () => {
     setSelectedImageId(index);
     setSelectedOption({});
@@ -207,11 +300,21 @@ function VerificationDashboard() {
                 </Col>
             </Row>
         </Col>
-        <Col xs={4} className='bg-white full p-relative border-left overflow-hidden'>
-          <PropertyEditForm onCancelEdit={onCancelEdit} selectedOption={selectedOption} />
-          
+        <Col xs={4} className='bg-white p-0 full p-relative border-left overflow-hidden'>
+          <PropertyEditForm
+            onCancelEdit={onCancelEdit}
+            selectedOption={selectedOption}
+            onMarkAsChecked={onMarkAsChecked}
+            onSave={onSaveModification}
+          />
           <ListGroup className='prediction-list'>
-            {prediction.topics && prediction.topics.map((pred, index) => <EditableItem key={`editable-item-${index}`} onSelect={onSelect} prediction={pred} selectedOption={selectedOption} />)}
+            {prediction.topics && prediction.topics.map((pred, index) => (
+              <EditableItem
+                key={`editable-item-${index}`}
+                onSelect={onSelect} prediction={pred}
+                selectedOption={selectedOption}
+              />
+            ))}
           </ListGroup>
         </Col>
         
