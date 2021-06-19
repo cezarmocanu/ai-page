@@ -26,6 +26,24 @@ def resize_image(aspect_string, image_stream):
     
     return stream
     
+def is_page_verified(queried_page):
+    total_entries = 0
+    verified_topics = 0
+    verified_options = 0
+
+    total_entries += len(queried_page.topics)
+    
+    for topic in queried_page.topics:
+        if topic.verified == True:
+            verified_topics += 1
+        
+        for option in topic.options:
+            if option.verified == True:
+                verified_options += 1
+                
+        total_entries += len(topic.options)
+    
+    return verified_topics+verified_options == total_entries
 
 @AnalysisController.route('/', methods=('GET', 'POST'))
 def analyze():
@@ -91,10 +109,15 @@ def analysis_get_one(form_id):
             options = []
             for option in topic.options:
                 options.append(dump(option))
-            t['options'] = options
+            t['options'] = sorted(options, key=lambda opt: int(opt['id']), reverse=False)
             topics.append(t)
-        p['topics'] = topics
+        p['topics'] = sorted(topics, key=lambda top: int(top['id']), reverse=False)
         output['pages'].append(p)
+    
+    pages = sorted(output['pages'], key=lambda page: int(page['order_number']), reverse=False)
+    
+    output['pages'] = pages
+    
     
     return jsonify(output)
 
@@ -106,7 +129,16 @@ def analysis_get_one_page(form_id, page_number_str):
     if page_number >= len(form.pages):
         abort(404)
         
-    page = form.pages[page_number]    
+    page_index = None
+    for index,page in enumerate(form.pages):
+        if page.order_number == page_number:
+            page_index = index
+            break
+    
+    if page_index == None:
+        return 'No page found with that order_number'
+    
+    page = form.pages[page_index]    
     output = dump(page)
     topics = []
     for topic in page.topics:
@@ -114,9 +146,10 @@ def analysis_get_one_page(form_id, page_number_str):
         options = []
         for option in topic.options:
             options.append(dump(option))
-        t['options'] = options
+        t['options'] = sorted(options, key=lambda opt: int(opt['id']), reverse=False)
         topics.append(t)
-    output['topics'] = topics
+    output['topics'] = sorted(topics, key=lambda top: int(top['id']), reverse=False)
+
     
     return jsonify(output)
 
@@ -133,36 +166,6 @@ def analysis_get_one_image(form_id, image_number_str):
     stream = resize_image(aspect, io.BytesIO(template_image.data))
     
     return send_file(stream, mimetype='image/JPEG')
-
-@AnalysisController.route('/verify', methods=['PUT'])
-def analysis_verify_data():
-    # form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
-    
-    ##TODO verify if body is ok
-    id = int(request.json['id'])
-    entity_type = request.json['type']
-    
-    Model = None
-    
-    if entity_type == 'OPTION':
-        Model = Option
-    if entity_type == 'TOPIC':
-        Model = Topic
-    if entity_type == 'PAGE':
-        Model = Page
-
-    entity = Model.query.filter_by(id = id).first_or_404(description='Entity does not exist')    
-
-    ##TODO automatic verified for bigger entities
-    
-    if entity == None:
-        return 'Entity could not be found'
-    
-    entity.verified = True  
-    db.session.commit()
-    
-    return 'success'
-    
 
 @AnalysisController.route('/update', methods=['PUT'])
 def analysis_update_data():
@@ -185,4 +188,85 @@ def analysis_update_data():
     
     ##TODO automatic verified for bigger entities
     db.session.commit()
+    return 'success'
+
+
+@AnalysisController.route('<form_id>/page/<page_number>/update', methods=['PUT'])
+def analysis_update_data_and_verify(form_id, page_number):
+    form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+    
+    ###TODO de utilizat si in cazul la celelalte cautari de pagini
+    page_order_number = int(page_number)
+    page_index = None
+    for index,page in enumerate(form.pages):
+        if page.order_number == page_order_number:
+            page_index = index
+            break
+    
+    if page_index == None:
+        return 'No page found with that order_number'
+
+    
+    id = int(request.json['id'])
+    entity_type = request.json['type']
+    value = request.json['value']
+    
+    if entity_type == 'OPTION':
+        option = Option.query.filter_by(id = id).first_or_404(description='Entity does not exist')    
+        option.verified = True
+        option.label = value
+        
+    if entity_type == 'TOPIC':
+        topic = Topic.query.filter_by(id = id).first_or_404(description='Entity does not exist')
+        topic.verified = True
+        topic.title = value
+
+    queried_page = form.pages[page_index]
+    
+    if is_page_verified(queried_page):
+        queried_page.verified = True
+        
+    db.session.commit()
+    
+    return 'success'
+
+@AnalysisController.route('<form_id>/page/<page_number>/verify', methods=['PUT'])
+def analysis_verify_page_data(form_id, page_number):
+    form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+    
+    ###TODO de utilizat si in cazul la celelalte cautari de pagini
+    page_order_number = int(page_number)
+    page_index = None
+    for index,page in enumerate(form.pages):
+        if page.order_number == page_order_number:
+            page_index = index
+            break
+    
+    if page_index == None:
+        return 'No page found with that order_number'
+
+    
+    id = int(request.json['id'])
+    entity_type = request.json['type']
+    
+    Model = None
+    
+    if entity_type == 'OPTION':
+        Model = Option
+    if entity_type == 'TOPIC':
+        Model = Topic
+
+    entity = Model.query.filter_by(id = id).first_or_404(description='Entity does not exist')    
+    
+    if entity == None:
+        return 'Entity could not be found'
+    
+    entity.verified = True  
+    queried_page = form.pages[page_index]
+    
+    if is_page_verified(queried_page):
+        queried_page.verified = True
+        
+    db.session.commit()
+    
     return 'success'
