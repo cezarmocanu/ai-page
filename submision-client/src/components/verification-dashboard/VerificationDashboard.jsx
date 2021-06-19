@@ -6,6 +6,7 @@ import {BsArrowsMove, BsEyeFill} from 'react-icons/bs';
 
 import {EditableItem} from '../editable-item/EditableItem';
 import {EditableLabel} from '../editable-label/EditableLabel';
+import {PageBrowseIndicator} from '../page-browse-indicator/PageBrowseIndicator';
 import {PropertyEditForm} from '../property-edit-form/PropertyEditForm';
 import {Canvas} from '../canvas/Canvas';
 
@@ -29,11 +30,12 @@ function VerificationDashboard() {
 
   const {formId} = useParams();
   // const [formData, loadedFormData] = useResource(`http://localhost:5000/analysis/${formId}`, {})
-  const [selectedImageId, setSelectedImageId] = useState(0);
+  const [selectedPageONr, setSelectedPageONr] = useState(0);
   const [selectedOption, setSelectedOption] = useState({});
   
-  const [image, imageLoaded] = useImage(`http://localhost:5000/analysis/${formId}/image/${selectedImageId}`);
-  const [prediction, predictionLoaded, setPrediction] = useResource(`http://localhost:5000/analysis/${formId}/page/${selectedImageId}`, []);
+  const [image, imageLoaded] = useImage(`http://localhost:5000/analysis/${formId}/image/${selectedPageONr}`);
+  const [prediction, predictionLoaded, setPrediction] = useResource(`http://localhost:5000/analysis/${formId}/page/${selectedPageONr}`, []);
+  const [formData, formDataLoaded, setFormData] = useResource(`http://localhost:5000/analysis/${formId}`, {});
   const [imageArray, imageArrayLoaded] = useFormImageArray(formId);
 
   const [offset ,setOffset] = useState({x: 0, y: 0});
@@ -47,9 +49,7 @@ function VerificationDashboard() {
   const draw = (ctx, dt) => {
 
     if (!imageLoaded || !predictionLoaded || !imageArrayLoaded) {
-      // console.log(imageLoaded)
       return;
-      
     }
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -130,6 +130,19 @@ function VerificationDashboard() {
     if (type === TOPIC) {
       const {options, ...topic} = value;
       setSelectedOption({...topic, type: TOPIC});
+
+      let {x,y} = options[0];
+      
+      // const {x, y} = options[0];      
+      options.forEach(option => {
+        x = option.x < x ? option.x : x;
+        y = option.y < y ? option.y : y;
+      })
+      
+      setOffset({
+        x: CANVAS_CONFIG.WIDTH * 1 / 4 - x, 
+        y: CANVAS_CONFIG.HEIGHT / 2 - y
+      });
     }
     else if (type === OPTION){
       const {x, y} = value;
@@ -242,7 +255,7 @@ function VerificationDashboard() {
   };
 
   const handleBrowseItemClick = (index) => () => {
-    setSelectedImageId(index);
+    setSelectedPageONr(index);
     setSelectedOption({});
   };
 
@@ -277,11 +290,16 @@ function VerificationDashboard() {
             <Row className='h-100'>
                 <Col className='page-browse' xs={2}>
                   {!imageArrayLoaded ? 'loading...' : 
-                    imageArray.map(({image}, index) => 
-                    <div key={`$browse-item-${index}`} onClick={handleBrowseItemClick(index)} className={`page-indicator ${index === selectedImageId && 'selected'}`}>
-                      <img src={image.currentSrc} alt=''/>
-                      <span>{index + 1} / {imageArray.length} </span>
-                    </div>)
+                    imageArray.map(({image}, index) => (
+                      <PageBrowseIndicator
+                        index={index}
+                        image={image}
+                        verified={formData.pages[index].verified}
+                        maxLength={imageArray.length}
+                        selectedPageIndex={selectedPageONr}
+                        onBrowseItemClick={handleBrowseItemClick(index)}
+                      />
+                    ))
                   }
                 </Col>
                 <Col xs={10}>
@@ -308,10 +326,10 @@ function VerificationDashboard() {
             onSave={onSaveModification}
           />
           <ListGroup className='prediction-list'>
-            {prediction.topics && prediction.topics.map((pred, index) => (
+            {prediction.topics && prediction.topics.map((topic, index) => (
               <EditableItem
                 key={`editable-item-${index}`}
-                onSelect={onSelect} prediction={pred}
+                onSelect={onSelect} topic={{...topic, formId, pageOrderNumber: selectedPageONr}}
                 selectedOption={selectedOption}
               />
             ))}

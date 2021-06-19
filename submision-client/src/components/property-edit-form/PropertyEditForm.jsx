@@ -29,28 +29,36 @@ function PropertyEditForm({selectedOption, onCancelEdit, onMarkAsChecked, onSave
     };
 
     const handleOnSave = (e) => {
-        const {id, type} = selectedOption;
+        const {id, type, formId, pageOrderNumber} = selectedOption;
         onSave(value);
         put({
             endpoint:ENDPOINTS.ANALYSIS_UPDATE,
+            params:{
+                formId,
+                pageOrderNumber
+            },
             body:{
                 id,
                 type,
                 value
             }
-        })
+        });
     };
 
     const handleOnMarkAsChecked = (e) => {
-        const {id, type} = selectedOption;
+        const {id, type, formId, pageOrderNumber} = selectedOption;
         onMarkAsChecked(e);
         put({
             endpoint:ENDPOINTS.ANALYSIS_VERIFY,
+            params:{
+                formId,
+                pageOrderNumber
+            },
             body:{
                 id,
                 type
             }
-        })
+        });
     };
 
     return (

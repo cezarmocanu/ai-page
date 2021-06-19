@@ -1,0 +1,95 @@
+@import '../../App.scss';
+
+@keyframes show-verified {
+    0%{
+        transform: translateY(-1rem);
+        opacity: 0;
+    }
+
+    75%{
+        transform: translateY(-1rem);
+        opacity: 0;
+    }
+
+    100%{
+        transform: translateY(0px);
+        opacity: 100%;
+    }
+}
+
+.page-indicator{
+    $border-radius: 10px;
+
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: $border-radius;
+    border: 1px solid $hover-color;
+    -webkit-box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.1); 
+    box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.1);
+    position: relative;
+
+    img {
+        height: auto;
+        width: 100%;
+    }
+
+    .verified-indicator{
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        width: 2rem;
+        height: 2rem;
+        color: $white;
+
+        border-top-right-radius: $border-radius;
+        // background-color: $success;
+        border:1rem solid transparent;
+        border-top:1rem solid $success;
+        border-right:1rem solid $success;
+
+        animation-name: show-verified;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in-out;
+        
+        svg{
+            /*this is inverted because of transparent border*/
+            position: absolute;
+            bottom:0px;
+            left:0px;
+            font-size: 10px;
+        }
+
+    }
+
+    &:hover {
+        cursor: pointer;
+        box-sizing: border-box;
+        background-color: $hover-color;
+        border: 1px solid $hover-color;
+        -webkit-box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6); 
+        box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6);
+
+        animation-name: hover-browse-item;
+        animation-duration: 0.1s;
+        animation-timing-function: ease-in;
+        transform: scale(0.9);
+    }
+
+    
+    &.selected {
+        cursor: pointer;
+        box-sizing: border-box;
+        background-color: $selected-color;
+        border: 1px solid $selected-color;
+        -webkit-box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6); 
+        box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6);
+
+        animation-name: select-browse-item;
+        animation-duration: 0.2s;
+        animation-timing-function: ease-out;
+        transform: scale(1.1);
+    
+    }
+}

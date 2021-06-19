@@ -16,8 +16,8 @@ const HOST = 'http://localhost:5000';
 const ENDPOINTS = {
     ANALYSIS_ALL: '/analysis/',
     ANALYSIS_ONE: '/analysis/$formId',
-    ANALYSIS_VERIFY: '/analysis/verify',
-    ANALYSIS_UPDATE: '/analysis/update'
+    ANALYSIS_VERIFY: '/analysis/$formId/page/$pageOrderNumber/verify',
+    ANALYSIS_UPDATE: '/analysis/$formId/page/$pageOrderNumber/update'
 }
 
 const get = async (endpoint, params) => {

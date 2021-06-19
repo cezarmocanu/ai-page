@@ -8,10 +8,10 @@ Content-Type: 'application/json'
 
 ###
 
-PUT http://localhost:5000/analysis/verify
+PUT http://localhost:5000/analysis/1/page/1/verify
 Content-Type: application/json
 
 {
-    "id": 1,
-    "type": "TOPIC"
+    "id": 66,
+    "type": "OPTION"
 }

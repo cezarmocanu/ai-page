@@ -3,9 +3,16 @@ import {Row, Col, ListGroup} from 'react-bootstrap';
 import {EditableLabel} from '../editable-label/EditableLabel';
 import './EditableItem.scss';
 
-function EditableItem({prediction, onSelect, selectedOption}) {
+function EditableItem({topic, onSelect, selectedOption}) {
     
-    const {title, options, verified:formVerified} = prediction;
+    const {title, options, verified:formVerified, formId, pageOrderNumber} = topic;
+
+    const queryParams = {
+      topicId: topic.id,
+      formId,
+      pageOrderNumber
+    };
+    
 
     const isSelected = (value, type) => {
       return selectedOption.id === value.id && selectedOption.type === type;
@@ -28,10 +35,10 @@ function EditableItem({prediction, onSelect, selectedOption}) {
             <Col xs={12} className="mb-1 text-primary">Statement:</Col>
             <Col xs={12} className="mb-1">
               <EditableLabel
-                key={`${TOPIC}-${prediction.id}`}
+                key={`${TOPIC}-${topic.id}`}
                 label={title} 
                 verified={formVerified}
-                {...commonProps(prediction, TOPIC)}
+                {...commonProps(topic, TOPIC)}
               />
             </Col>
             <Col xs={12} className="mb-1 text-primary">Options:</Col>
@@ -43,7 +50,7 @@ function EditableItem({prediction, onSelect, selectedOption}) {
                   <EditableLabel 
                     label={label}
                     verified={verified}
-                    {...commonProps({...option, topicId: prediction.id}, OPTION)}
+                    {...commonProps({...option, ...queryParams}, OPTION)}
                   />
                 </Col>);
               })
