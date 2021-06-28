@@ -1,16 +1,18 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState, useEffect, useRef} from 'react';
 import {Alert} from 'react-bootstrap';
 import {FiCheckCircle} from 'react-icons/fi';
 
 import './EditableLabel.scss';
 
 function EditableLabel({label, onSelect, selected, verified}){
+    const labelRef = useRef();
     const getLabelStyle = () => {
         if (selected) {
-            return 'info';
+            labelRef.current.scrollIntoView({behavior: "smooth", block: "center"});
+            return 'selected';
         }
 
-        return 'light';
+        return '';
     };
 
     const renderVerification = () => {
@@ -25,8 +27,8 @@ function EditableLabel({label, onSelect, selected, verified}){
     };
 
     return (
-        <div className="editable-label">
-            <Alert variant={getLabelStyle()} onClick={onSelect} className='fluid' >
+        <div className="editable-label" ref={labelRef}>
+            <Alert className={'fluid ' + getLabelStyle()} onClick={onSelect} >
                 {renderVerification()}
                 <span>{label}</span>
             </Alert>

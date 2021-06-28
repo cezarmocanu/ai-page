@@ -26,6 +26,7 @@ CORS(app)
 
 app.register_blueprint(TemplateController)
 app.register_blueprint(AnalysisController)
+app.register_blueprint(CollectorController)
 
 # @app.route('/rabbitmq/test')
 # def rabbitmq_test():

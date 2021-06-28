@@ -1,0 +1,59 @@
+@import '../../App.scss';
+
+@keyframes show-analysis {
+    0%{
+        opacity: 0;
+        transform-origin: center;
+        transform: scale(0.1);
+        
+    }
+    75%{
+        opacity: 1;
+        transform-origin: center;
+        transform: scale(1.1) translateY(-30%);
+        
+    }   
+    100%{
+        opacity: 1;
+        transform-origin: center;
+        transform: scale(1) translateY(0%);
+    } 
+
+}
+
+.page {
+    background-color: $light;
+}
+.analyses-table {
+
+    .topics-dropdown{
+        max-height: 9rem;
+        overflow-y: auto;
+    }
+    .analysis-card{
+        animation-name: show-analysis;
+        animation-duration: 1s;
+    }
+    .card {
+        position: relative;
+
+        .delete-button{
+            position: absolute;
+            right: -0.6rem;
+            top: -0.6rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            background-color: $secondary;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color:$white;
+            border-radius: 50%;
+
+            &:hover {
+                background-color: $hover-color;
+                cursor: pointer;
+            }
+        }
+    }    
+}

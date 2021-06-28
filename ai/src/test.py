@@ -1,13 +1,12 @@
-import cv2
-import numpy as np
-from constants import KEY, RESOURCES
-from PIL import Image
-import io
 
-nparr = cv2.imread('{resources}/clinical_ds/jpg/1.jpg'.format(resources=RESOURCES))
+from ocr.ocr import init
 
-img = Image.fromarray(nparr)
-file_object = io.BytesIO()
+
+init()
+# nparr = cv2.imread('{resources}/clinical_ds/jpg/1.jpg'.format(resources=RESOURCES))
+
+# img = Image.fromarray(nparr)
+# file_object = io.BytesIO()
 
 # encoded = cv2.imencode('.jpg', img)[1].tostring()
 
@@ -17,10 +16,10 @@ file_object = io.BytesIO()
 
 
 
-img.save(file_object, 'JPEG')
+# img.save(file_object, 'JPEG')
 
-file_object.seek(0)
-print(file_object.read())
+# file_object.seek(0)
+# print(file_object.read())
 
 # cv2.imshow('aa',img2)
 # cv2.waitKey(0)

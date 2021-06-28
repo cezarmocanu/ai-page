@@ -1,10 +1,10 @@
-
+import React,{useRef} from 'react';
 import {Row, Col, ListGroup} from 'react-bootstrap';
 import {EditableLabel} from '../editable-label/EditableLabel';
 import './EditableItem.scss';
 
 function EditableItem({topic, onSelect, selectedOption}) {
-    
+  
     const {title, options, verified:formVerified, formId, pageOrderNumber} = topic;
 
     const queryParams = {
@@ -18,9 +18,8 @@ function EditableItem({topic, onSelect, selectedOption}) {
       return selectedOption.id === value.id && selectedOption.type === type;
     };
 
-    const handleOnSelect = (value, type) => () => {
-      onSelect(value, type);
-    };
+    const handleOnSelect = (value, type) => () => onSelect(value, type);
+    
 
     const commonProps = (value, type) => ({
       selected: isSelected(value,type),
@@ -30,7 +29,7 @@ function EditableItem({topic, onSelect, selectedOption}) {
     const {TOPIC, OPTION} = EditableLabel.TYPES;
 
     return (
-        <ListGroup.Item className="mb-1 mt-2 bg-white text-white border-0 p-2" as="li" >
+        <ListGroup.Item className="mb-1 mt-2 bg-white text-white border-0 p-2" as="li">
           <Row>
             <Col xs={12} className="mb-1 text-primary">Statement:</Col>
             <Col xs={12} className="mb-1">

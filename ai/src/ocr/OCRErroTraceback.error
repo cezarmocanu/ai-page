@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "src/ocr_consumer.py", line 3, in <module>
+    consumer()
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/rabbitmq/consumer.py", line 39, in consumer
+    channel.start_consuming()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/pika/adapters/blocking_connection.py", line 1865, in start_consuming
+    self._process_data_events(time_limit=None)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/pika/adapters/blocking_connection.py", line 2026, in _process_data_events
+    self.connection.process_data_events(time_limit=time_limit)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/pika/adapters/blocking_connection.py", line 824, in process_data_events
+    self._flush_output(common_terminator)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/pika/adapters/blocking_connection.py", line 523, in _flush_output
+    raise self._closed_result.value.error
+pika.exceptions.StreamLostError: Stream connection lost: BrokenPipeError(32, 'Broken pipe')

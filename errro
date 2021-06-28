@@ -1,0 +1,406 @@
+HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:36:05] "GET /analysis/46 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jun/2021 17:36:36] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:36:51] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:36:51] "GET /analysis/46 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jun/2021 17:36:56] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:36:56] "GET /analysis/46 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jun/2021 17:37:27] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:37:37] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:37:37] "GET /analysis/46 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jun/2021 17:37:48] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:37:48] "GET /analysis/46 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jun/2021 17:37:56] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:37:56] "GET /analysis/46 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jun/2021 17:38:27] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:38:33] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:38:33] "GET /analysis/46 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jun/2021 17:38:41] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:38:41] "GET /analysis/46 HTTP/1.1" 200 -
+127.0.0.1 - - [28/Jun/2021 17:39:12] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:39:18] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 60, in collection_control
+    return jsonify(dump(template_form.collections))
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/schemas/__init__.py", line 70, in dump
+    t = type(object[0]).__name__
+IndexError: list index out of range
+127.0.0.1 - - [28/Jun/2021 17:39:48] "GET /analysis/46 HTTP/1.1" 500 -
+127.0.0.1 - - [28/Jun/2021 17:39:53] "GET /collector/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/CollectorController.py", line 58, in collection_control
+    template_form = TemplateForm.query.filter_by(id = form_id).first_or_404('No form with that id')
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_sqlalchemy/__init__.py", line 468, in first_or_404
+    rv = self.first()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 2750, in first
+    return self.limit(1)._iter().first()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 2834, in _iter
+    result = self.session.execute(
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1676, in execute
+    conn = self._connection_for_bind(bind, close_with_result=True)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1526, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 747, in _connection_for_bind
+    conn = bind.connect()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3166, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3245, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3212, in _wrap_pool_connect
+    return fn()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 301, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 761, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 419, in checkout
+    rec = pool._do_get()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 133, in _do_get
+    raise exc.TimeoutError(
+sqlalchemy.exc.TimeoutError: QueuePool limit of size 5 overflow 10 reached, connection timed out, timeout 30.00 (Background on this error at: http://sqlalche.me/e/14/3o7r)
+127.0.0.1 - - [28/Jun/2021 17:39:53] "GET /analysis/46 HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2088, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask/app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/Users/cmocanu/Desktop/ai-page/ai/src/controllers/AnalysisController.py", line 112, in analysis_get_one
+    form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/flask_sqlalchemy/__init__.py", line 468, in first_or_404
+    rv = self.first()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 2750, in first
+    return self.limit(1)._iter().first()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 2834, in _iter
+    result = self.session.execute(
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1676, in execute
+    conn = self._connection_for_bind(bind, close_with_result=True)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1526, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 747, in _connection_for_bind
+    conn = bind.connect()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3166, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3245, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3212, in _wrap_pool_connect
+    return fn()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 301, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 761, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 419, in checkout
+    rec = pool._do_get()
+  File "/Users/cmocanu/.local/share/virtualenvs/ai-shZdfStd/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 133, in _do_get
+    raise exc.TimeoutError(
+sqlalchemy.exc.TimeoutError: QueuePool limit of size 5 overflow 10 reached, connection timed out, timeout 30.00 (Background on this error at: http://sqlalche.me/e/14/3o7r)

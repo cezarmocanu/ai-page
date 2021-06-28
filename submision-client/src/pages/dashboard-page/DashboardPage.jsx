@@ -5,11 +5,12 @@ import {SiProbot} from 'react-icons/si';
 import {GoLightBulb} from 'react-icons/go';
 import {FiCheckCircle} from 'react-icons/fi';
 import {ImSpinner4} from 'react-icons/im';
-import {AiOutlineFileImage} from 'react-icons/ai';
+import {AiOutlineFileImage, AiFillDelete} from 'react-icons/ai';
 
 import {Page} from '../../components/page/Page';
 
-import {get, ENDPOINTS} from '../../constants';
+import {get, remove, ENDPOINTS, REFRESH_INTERVAL} from '../../constants';
+import './DashboardPage.scss';
 
 const STATUS_ICON_MAP = {
     NEW: {
@@ -41,6 +42,8 @@ const BUTTON_MAPPING = {
     }
 }
 
+
+
 function DashboardPage() {
     const [analyses, setAnalysis] = useState([]);
     const [activeFilter, setActiveFilter] = useState('');
@@ -50,8 +53,17 @@ function DashboardPage() {
         setAnalysis(results.data);
     }
 
+    const handleOnDelete = (id) => (e) => {
+        
+        const formIndex = analyses.findIndex(analysis => analysis.id === id);
+        const pre = analyses.slice(0,formIndex);
+        const post = analyses.slice(formIndex + 1);
+        setAnalysis([...pre,...post]);
+        remove({endpoint:ENDPOINTS.ANALYSIS_ONE,params:{formId:id}});
+    };
+
     useEffect(()=>{
-        const interval = setInterval(fetchData, 5000);
+        const interval = setInterval(fetchData, REFRESH_INTERVAL);
         fetchData();
         return () => {
             clearInterval(interval);
@@ -81,17 +93,31 @@ function DashboardPage() {
                     </Link>)
             }
 
-            return <Button variant='outline-primary'>{label}</Button>
+            return (
+                <div>
+                    <Link to={`/verification/${id}`}>
+                        <Button variant='outline-warning'>EDIT</Button>
+                    </Link>
+                    <Link className='ml-2' to={`/collection/${id}`}>
+                        <Button variant='outline-primary'>DATA</Button>
+                    </Link>
+                </div>
+                
+            );
         }
 
         const StatusIcon = STATUS_ICON_MAP[status].Component;
         const iconColor = STATUS_ICON_MAP[status].color;
         return (
             <Col xs={2} className='flex mb-4'>
-                <Card>
+                <Card className='analysis-card'>
+                    <div className="delete-button" onClick={handleOnDelete(id)}><AiFillDelete/></div>
                     <Card.Body>
                         <Card.Title>{title} <StatusIcon className={`ml-2 mb-2 text-${iconColor}`}/></Card.Title>
                         <Card.Text>
+                            <h6 variant={color}>
+                                {`${numberOfImages} ${numberOfImages === 1 ? 'page' : 'pages'}`}
+                            </h6>
                             <Badge variant={color}>
                                 {status}
                             </Badge>
@@ -142,7 +168,7 @@ function DashboardPage() {
                             </Col>
                             <Col xs={12} className='mb-4'>
                                 <ProgressBar>
-                                    <ProgressBar max={images} variant="success" now={images} key={1} />
+                                    <ProgressBar max={images} variant="primary" now={images} key={1} />
                                     <ProgressBar max={images-pages} variant="warning" now={pages} key={2} />
                                 </ProgressBar>
                             </Col>
@@ -159,9 +185,9 @@ function DashboardPage() {
                             <Col xs={12} className='mb-2'><h5>FORMS</h5></Col>
                             <Col xs={12} className='mb-4'>
                                 <ProgressBar>
-                                    <ProgressBar max={newForms} variant="info" now={newForms} key={4} />
-                                    <ProgressBar max={analysedForms} variant="warning" now={analysedForms} key={5} />
-                                    <ProgressBar max={verifiedForms} variant="success" now={verifiedForms} key={6} />
+                                    <ProgressBar max={newForms+analysedForms+verifiedForms} variant="info" now={newForms} key={4} />
+                                    <ProgressBar max={newForms+analysedForms+verifiedForms} variant="warning" now={analysedForms} key={5} />
+                                    <ProgressBar max={newForms+analysedForms+verifiedForms} variant="success" now={verifiedForms} key={6} />
                                 </ProgressBar>
                             </Col>
                             <Col xs={4}>
@@ -195,7 +221,7 @@ function DashboardPage() {
             </Row>
             <Row className='fluid-w p-4 pb-5 bg-light m-0'>
                 {renderDashboardOverview()}
-                <Col xs={12} className='p-4 border border-white bg-white text-dark'>
+                <Col xs={12} className='p-4 border border-white bg-white text-dark analyses-table'>
                     <Row>
                         <Col xs={12} className='mb-4'><h2>ANALYSES</h2></Col>
                         {ANALYSES}    

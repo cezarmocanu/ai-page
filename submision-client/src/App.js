@@ -1,6 +1,6 @@
-import React,{useRef, useState} from 'react';
+import React,{useRef, useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Form, Row, Col} from 'react-bootstrap';
+
 import {v4 as uuidv4} from 'uuid';
 import axios from 'axios';
 import {
@@ -11,80 +11,60 @@ import {
 } from "react-router-dom";
 
 import {DashboardPage} from './pages/dashboard-page/DashboardPage';
-
+import {CollectionDashboard} from './pages/collection-dashboard/CollectionDashboard';
+import { KeyboardContext } from './components/Context';
 import {VerificationDashboard} from './components/verification-dashboard/VerificationDashboard';
-import {Page} from './components/page/Page';
+import {KEYS, KEYS_VALUES} from './constants.js';
+import {SubmitPage} from './pages/submit-page/SubmitPage';
 
-const COLLECTOR_ROUTE = 'http://localhost:5000/template/'
+
 
 function App() {
-  const formRef = useRef();
-  const [images, setImages] = useState({});
-  const [fileInputs, setFileInputs] = useState([uuidv4()])
-  const [data, setData] = useState({title: ''});
+  
+  
+  
+  const [keyEvent, setKeyEvent] = useState({});
 
-  const sendImages = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
+  
 
-    Object.keys(images).forEach(key => {
-      formData.append(key, images[key]);
-    });
+  const handleKeyPress = (e) => {
     
-    formData.append('title', data.title);
-    
-    
-    const sendData = async () => {
-      await axios.post(COLLECTOR_ROUTE, formData, {
-        headers:{
-            'Content-Type': 'multipart/form-data'
-        }
-      });
+    if (!KEYS_VALUES.includes(e.code)) {
+      return;
     }
-    sendData();
-  };
-
-  const handleFormChange =  (e) => {
-    setData({...data, [e.target.name]: e.target.value});
-  };
-
-  const handleFileChange = (e) => {
-    const reader = new FileReader();
-    const file = e.target.files[0];
-    reader.onload = (loadEvent) => {
-      setImages({...images, [e.target.name]: loadEvent.target.result});
-    }
-    reader.readAsDataURL(file);
-  };
-
-  const addFileInput = (e) => {
-    setFileInputs([...fileInputs, uuidv4()])
+    setKeyEvent(e);
   }
 
+  useEffect(()=>{
+    document.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    }
+    
+  },[])
+
+  
+
   return (
-    <Router>
-      <Switch>
-        <Route exact path={'/'}>
-          <DashboardPage/>
-        </Route>
-        <Route path={'/verification/:formId'}>
-          <VerificationDashboard />
-        </Route>
-        <Route path={'/submit'}>
-          <Row>
-            <Col xs={6}>
-              <Form ref={formRef}>
-                <input onChange={handleFormChange} name='title' type='text' value={data.title} />
-                {fileInputs.map(inputName => <input key={inputName} onChange={handleFileChange} name={inputName} type='file'/>)}
-              </Form>
-              <button onClick={addFileInput}>Add File</button>
-              <button onClick={sendImages} type="submit">Send files</button>
-              {/* <img src={images['file'] === undefined ? '' : images['file']}/> */}
-            </Col>
-            </Row>
-        </Route>
-      </Switch>
-    </Router>
+    <KeyboardContext.Provider value={keyEvent}>
+      <Router>
+        <Switch>
+          <Route exact path={'/'}>
+            <DashboardPage/>
+          </Route>
+          <Route path={'/verification/:formId'}>
+            <VerificationDashboard />
+          </Route>
+          <Route path={'/submit'}>
+            <SubmitPage />
+          </Route>
+          <Route path={'/collection/:formId'}>
+            <CollectionDashboard />
+          </Route>
+        </Switch>
+      </Router>
+    </KeyboardContext.Provider>
   )
 }
 

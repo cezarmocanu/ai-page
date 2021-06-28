@@ -8,3 +8,4 @@ class Option(db.Model):
     h = db.Column(db.Integer, nullable=False)
     topic_id = db.Column(db.Integer, db.ForeignKey('topic.id'), nullable=False)
     verified = db.Column(db.Boolean, default = False, nullable=False)
+    # extractions = db.relationship('Extraction', backref='option', cascade="all,delete",lazy=True)

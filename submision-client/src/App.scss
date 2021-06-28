@@ -16,6 +16,10 @@ $warning: #FAC05E;
 $info: #29b0ff;
 $light: #eaeaea;
 
+
+$zzz: #ff2954;
+
+
 @import "~bootstrap/scss/bootstrap";
 // @import "./Variabiles.scss";
 $hover-color: lighten($secondary, 35%);
@@ -45,6 +49,12 @@ $selected-color: $info;
 
 .p-relative{
     position: relative;
+}
+
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 

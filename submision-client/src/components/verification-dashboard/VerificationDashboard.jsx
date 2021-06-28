@@ -1,19 +1,21 @@
-import React, {useState}  from 'react';
+import React, {useState, useContext, useEffect}  from 'react';
 import {useParams} from 'react-router-dom';
-import {Container, Nav, Row, Col, Button, ListGroup} from 'react-bootstrap';
+import {Container, Nav, Row, Col, Button, ListGroup, OverlayTrigger, Spinner, Tooltip,Toast} from 'react-bootstrap';
 import {BiArrowBack} from 'react-icons/bi';
 import {BsArrowsMove, BsEyeFill} from 'react-icons/bs';
+import {AiOutlineQuestionCircle} from 'react-icons/ai';
 
 import {EditableItem} from '../editable-item/EditableItem';
 import {EditableLabel} from '../editable-label/EditableLabel';
 import {PageBrowseIndicator} from '../page-browse-indicator/PageBrowseIndicator';
 import {PropertyEditForm} from '../property-edit-form/PropertyEditForm';
 import {Canvas} from '../canvas/Canvas';
+import {KeyboardContext } from '../Context';
 
 import useImage from '../../hooks/useImage';
 import useResource from '../../hooks/useResource';
 import useFormImageArray from '../../hooks/useFormImageArray';
-import {EDIT_MODES, RANDOM_COLORS} from '../../constants.js';
+import {EDIT_MODES, KEYS} from '../../constants.js';
 
 import './VerificationDashboard.scss';
 
@@ -42,9 +44,198 @@ function VerificationDashboard() {
   const [origin, setOrigin] = useState({x: 0, y: 0});
   const [editMode, setEditMode] = useState(EDIT_MODES.OBSERVE);
   const [isDragging, setIsDragging] = useState(false);
+  const [showShortcuts,setShowShortcuts] = useState(false);
+
+  
   // const [rerender, setRerender] = useState(true);//set rerender using only one setState
 
   // const [editedValue, setEditedValue] = useState();
+
+  const keyEvent = useContext(KeyboardContext);
+
+  useEffect(()=>{
+    const {code:key} = keyEvent;
+  
+    if (key === KEYS.SPACE) {
+      setEditMode(EDIT_MODES.PAN);
+      return;
+    }
+
+    if (key === KEYS.O) {
+      setEditMode(EDIT_MODES.OBSERVE);
+      return;
+    }
+
+    if (key === KEYS.ESC) {
+      setSelectedOption({});
+      return;
+    }
+
+    if (key === KEYS.UP || key === KEYS.DOWN) {
+
+      if(Object.values(selectedOption).length === 0) {
+        
+        const {topics} = prediction;
+
+        for(let i = 0;i < topics.length;i++) {
+          const {options, verified,id: topicId} = topics[i];
+          if (!verified) {
+            onSelect({
+              ...topics[i],
+              formId,
+              pageOrderNumber: selectedPageONr,
+              type: TOPIC
+            }, TOPIC);    
+            return;
+          }
+
+          for(let oI = 0; oI < options.length; oI++) {
+            const option = options[oI];
+            console.log(option)
+            if (!option.verified) {
+              onSelect({
+                ...option,
+                formId,
+                topicId,
+                pageOrderNumber: selectedPageONr,
+                type: OPTION
+              }, OPTION);  
+              return;
+            }
+          }
+        }
+
+        onSelect({
+          ...prediction.topics[0],
+          formId,
+          pageOrderNumber: selectedPageONr,
+          type: TOPIC
+        }, TOPIC);
+      }
+      else {
+        
+        if (key === KEYS.DOWN) {
+          if (selectedOption.type === TOPIC) {
+            const topic = selectedOption;
+            const {formId, pageOrderNumber, id, options} = topic;
+
+            if (options.length > 0) {
+              onSelect({
+                ...options[0],
+                topicId: id,
+                formId,
+                pageOrderNumber,
+                type: OPTION
+              }, OPTION);
+            }
+            else {
+              // in caz ca topicul nu are optiuni sa treci la urmatorul topic
+            }
+          }
+          else if (selectedOption.type === OPTION) {
+            const option = selectedOption;
+            const {formId, pageOrderNumber, topicId, id} = option;
+
+            const topics = prediction.topics;
+            const topicIndex = topics.findIndex(topic => topic.id === topicId);
+
+            const options = topics[topicIndex].options;
+            const optionIndex = options.findIndex(opt => opt.id === id);
+            
+            if (optionIndex + 1 < options.length) {
+              onSelect({
+                ...options[optionIndex+1],
+                topicId,
+                formId,
+                pageOrderNumber,
+                type: OPTION
+              }, OPTION);
+            }
+            else if (topicIndex + 1 < topics.length){
+              onSelect({
+                ...topics[topicIndex + 1],
+                formId,
+                pageOrderNumber: selectedPageONr,
+                type: TOPIC
+              }, TOPIC)
+            }
+            else {
+              return;
+            }
+            
+          }
+        }
+        else if (key === KEYS.UP) {
+          if (selectedOption.type === TOPIC) {
+            const topic = selectedOption;
+            const {formId, pageOrderNumber, id} = topic;
+
+            const topics = prediction.topics;
+            const topicIndex = topics.findIndex(topic => topic.id === id);
+
+            if (topicIndex === 0) {
+              return;
+            }
+            else if (topicIndex - 1 >= 0) {
+              const prevTopic = topics[topicIndex - 1];
+              if (prevTopic.options.length > 0) {
+                const lastOptionIndex = prevTopic.options.length - 1;
+                const option = prevTopic.options[lastOptionIndex];
+                onSelect({
+                      ...option,
+                      topicId: prevTopic.id,
+                      formId,
+                      pageOrderNumber,
+                      type: OPTION
+                    }, OPTION);
+              }
+              else {
+                //de facut daca nu are options sa mearga la topicul precedent
+              }
+             
+            }
+           
+          }
+          else if (selectedOption.type === OPTION) {
+            const option = selectedOption;
+            const {formId,topicId, pageOrderNumber, id} = option;
+
+            const topics = prediction.topics;
+            const topicIndex = topics.findIndex(topic => topic.id === topicId);
+
+            const currentTopic = topics[topicIndex];
+            const {options} = currentTopic;
+            const optionIndex = options.findIndex(opt => opt.id === id);
+
+            if (optionIndex - 1 >= 0) {
+              const prevOption = options[optionIndex - 1];
+              onSelect({
+                ...prevOption,
+                topicId,
+                formId,
+                pageOrderNumber,
+                type: OPTION
+              }, OPTION);
+            }
+            else {
+              onSelect({
+                ...currentTopic,
+                formId,
+                pageOrderNumber: selectedPageONr,
+                type: TOPIC
+              }, TOPIC)
+            }
+
+            
+          }
+        }
+        
+      }
+      
+    }
+
+
+  },[keyEvent]);
 
   const draw = (ctx, dt) => {
 
@@ -60,16 +251,6 @@ function VerificationDashboard() {
       const {x, y, w, h} = selectedOption;
       ctx.fillRect(offset.x + x,offset.y + y,w,h);
     }
-    // prediction.topics.forEach((pred, index) => {
-    //   const {options} = pred;
-
-    //   ctx.fillStyle = RANDOM_COLORS[index % RANDOM_COLORS.length];
-    //   options.forEach(option => {
-    //       const {x, y, w, h} = option;
-    //       ctx.fillRect(offset.x + x,offset.y + y,w,h);
-    //   });
-
-    // });
   };
 
   const panImage = (e) => {
@@ -128,13 +309,13 @@ function VerificationDashboard() {
   const onSelect = (value, type) => {
 
     if (type === TOPIC) {
-      const {options, ...topic} = value;
-      setSelectedOption({...topic, type: TOPIC});
+      
+      setSelectedOption({...value, type: TOPIC});
 
-      let {x,y} = options[0];
+      let {x,y} = value.options[0];
       
       // const {x, y} = options[0];      
-      options.forEach(option => {
+      value.options.forEach(option => {
         x = option.x < x ? option.x : x;
         y = option.y < y ? option.y : y;
       })
@@ -261,35 +442,72 @@ function VerificationDashboard() {
 
   const createEditModeHandler = (editMode) => (e) => setEditMode(editMode);
   
+  const toggleShortcuts = () => {
+    setShowShortcuts(prevValue => !prevValue);
+  };
+
   return (
     <Container fluid className='verification-dashboard full bg-white p-0'> 
       <Row className='full m-0'>
-        <Col xs={1} className='bg-dark p-2'>
+        <Col xs={1} className='navigation bg-dark p-2'>
           <Nav className='flex-column p-0'>
-            <Button
-              href='/'
-              className='mb-2'
-              variant='secondary'>
-                <BiArrowBack/>  
-            </Button>
-            <Button
-              onClick={createEditModeHandler(EDIT_MODES.OBSERVE)}
-              className='mb-2'
-              variant={editMode === EDIT_MODES.OBSERVE ? 'info' : 'secondary'}>
-              <BsEyeFill/>  
-            </Button>
-            <Button
-              onClick={createEditModeHandler(EDIT_MODES.PAN)}
-              className='mb-2'
-              variant={editMode === EDIT_MODES.PAN ? 'info' : 'secondary'}>
-              <BsArrowsMove/>  
-            </Button>
+            <OverlayTrigger
+              placement='right'
+              overlay={<Tooltip id='goBackTooltip'>Go back</Tooltip>}
+              >
+              <Button
+                href='/'
+                className='mb-2'
+                variant='secondary'>
+                  <BiArrowBack/>  
+              </Button>
+            </OverlayTrigger>
+            
+            <OverlayTrigger
+              placement='right'
+              overlay={<Tooltip  id='observeTooltip'>Observe (O)</Tooltip>}
+              >
+              <Button
+                onClick={createEditModeHandler(EDIT_MODES.OBSERVE)}
+                className='mb-2'
+                variant={editMode === EDIT_MODES.OBSERVE ? 'info' : 'secondary'}>
+                <BsEyeFill/>  
+              </Button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              placement='right'
+              overlay={<Tooltip id='panTooltip'>Pan/Move (Space)</Tooltip>}
+              >
+              <Button
+                onClick={createEditModeHandler(EDIT_MODES.PAN)}
+                className='mb-2'
+                variant={editMode === EDIT_MODES.PAN ? 'info' : 'secondary'}>
+                <BsArrowsMove/>  
+              </Button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              placement='right'
+              overlay={<Tooltip id='shortcuts'>Shortcuts</Tooltip>}
+              >
+              <Button
+                onClick={toggleShortcuts}
+                className='mb-2'
+                variant='secondary'>
+                <AiOutlineQuestionCircle/>  
+              </Button>
+            </OverlayTrigger>
           </Nav>
         </Col>
         <Col xs={7} className='d-flex justify-content-center align-items-center h-100'>
             <Row className='h-100'>
                 <Col className='page-browse' xs={2}>
-                  {!imageArrayLoaded ? 'loading...' : 
+                  {!imageArrayLoaded ? 
+                    <div className='flex-center fluid'>
+                      <Spinner animation="border" variant="primary" />
+                    </div>
+                    : 
                     imageArray.map(({image}, index) => (
                       <PageBrowseIndicator
                         index={index}
@@ -336,7 +554,33 @@ function VerificationDashboard() {
           </ListGroup>
         </Col>
         
-      </Row>   
+      </Row>
+      <Toast show={showShortcuts} onClose={toggleShortcuts} className='shortcuts-toast'>
+          <Toast.Header>
+            <h4>Help & Shortcuts</h4>
+          </Toast.Header>
+          <Toast.Body>
+            <div>
+              <h5><AiOutlineQuestionCircle/> Help:</h5>
+              <p>In this dashboard you can verify if the extracted data is correct.
+              Simply click on any option from the right panel and mark it as checked or modify it
+              and save it.
+              </p>
+            </div>
+            <div>
+              <h5><AiOutlineQuestionCircle/>  Shortcuts:</h5>
+              <p>Up Arrow - move to the previous extraction</p>
+              <p>Down Arrow - move to next extraction</p>
+              <p>Enter - focus the text so you can edit it</p>
+              <p>Enter Twice - save the modification or mark extraction as checked</p>
+              <p>Esc - deselect extraction</p>
+              <p>O - Switch in observe mode</p>
+              <p>Space - Switch to pan/move mode, so you can drag the image</p>
+            </div>
+
+            
+          </Toast.Body>
+        </Toast>
     </Container>
   );
 }

@@ -162,7 +162,7 @@ def splitrows_by_checkboxes(text_rows, checkboxes, img):
     
     sentences = []
     word_index = 0
-    
+
     while len(cut_positions) > 0:
       sentence = []
       while len(cut_positions) > 0 and  current_row[0][KEY.X] <= cut_positions[0][KEY.X]:
@@ -170,18 +170,18 @@ def splitrows_by_checkboxes(text_rows, checkboxes, img):
         sentence.append(current_row[0])
         current_row.pop(0)
         word_index += 1
-      
+
       cut_positions.pop(0)
       sentences.append(sentence)
-      
+    
     sentences.append(current_row)
     text_sentences.extend(sentences)
-    
-    # for i in range(0, len(sentences)):      
+
+  # for i in range(0, len(sentences)):      
     #   sw = sentences[i][0]
     #   ew = sentences[i][-1]
       # img = rectangle(img, (sw[0], sw[1]), (ew[0] + ew[2], ew[1] + ew[3]), (255,0,255), 3)
-
+  
   # show(img)
   
   return text_sentences
@@ -209,10 +209,10 @@ def associate_checkboxes(sentences, checkboxes, img):
         
         option_dict[KEY.CHECBOX] = checkboxes.pop(0)
         option_dict[KEY.LABEL] = sentences.pop(i)
-        break;
+        break
     form_options.append(option_dict)
     # index += 1
-    
+  
   sentences = sorted(sentences, key= lambda x: x[0][KEY.Y], reverse=True)
   
   topics = []
@@ -344,71 +344,146 @@ def create_ocr_analisys(data):
   
   compressed_topics = compress_data(topics)
   return compressed_topics
-        
+       
+### TODO add topics id
+def extract_data(template, query, topics):
+  # show(template)
+  # show(query)
+  birdeye = match_keypoints(template, query)
+  # show(birdeye)
+  
+  extractions = []
+  
+  for topic in topics:
+    bestResult = None
+    bestImage = None
+    bestOption = None
+    for option in topic:
+      [topic_id, id, x, y, w, h] = option
+      sy = int(y + 0.2 * h)
+      ey = int(y + h - 0.2 * h)
+      
+      sx = int(x + 0.2 * w)
+      ex = int(x + w - 0.2 * w)
+    
+      roi = birdeye[ sy:ey ,  sx: ex]
+      roiGray = cvtColor(roi,COLOR_BGR2GRAY)
+      _, roiThresh = threshold(roiGray, 150, 255, THRESH_BINARY_INV)
+      roiValue = countNonZero(roiThresh)
+      
+      if bestResult == None:
+        bestResult = roiValue
+        bestImage = roiThresh
+        bestOption = {
+          'topic_id' : topic_id,
+          'option_id' : id
+        }
+      elif bestResult < roiValue:
+        bestResult = roiValue
+        bestImage = roiThresh
+        bestOption = {
+          'topic_id' : topic_id,
+          'option_id' : id
+        }
+    # show(bestImage)
+    extractions.append(bestOption)
+    
+  return [extractions, birdeye]
+
 def init():
   
-  #OCR(1)
-  topics = LOAD_DATA(0)
-  template_path = r"{dir}/clinical_ds/jpg/1.jpg".format(dir=RESOURCES);
-  query_path = r"{dir}/1-birdeye.jpg".format(dir=COLLECTED);
+  # OCR(1)
+  # topics = LOAD_DATA(0)
+  # template_path = r"{dir}/clinical_ds/jpg/export.jpg".format(dir=RESOURCES);
+  template_path = r"{dir}/clinical_ds/jpg/bottles.jpg".format(dir=RESOURCES);
+  # query_path = r"{dir}/1-birdeye.jpg".format(dir=COLLECTED);
+  
+  image = imread(template_path)
+  
+  for r in range(len(image)):
+    for c in range(len(image[r])):
+      image[r][c][0] = 0
+      image[r][c][1] = 0
+  
+  show(image)
+  # t_image = imread(template_path)
+  # no_graybox = add(t_image, selectGrayboxes(t_image))
   
   
-  t_image = imread(template_path)
-  q_image = imread(query_path)
+  # checkbox_mask, checkbox_contours =  selectCheckboxes(no_graybox)
+  # no_checkbox_img = add(no_graybox, checkbox_mask)
+  
+  
+  # no_lines_img = add(no_checkbox_img, selectLines(no_checkbox_img))
+  
+  # show(no_lines_img)
+  # boxes = multifilter_word_querry(no_lines_img)
+  
+  # text_rows = select_rows(boxes, np.copy(no_lines_img))
+  
+  # sentences = splitrows_by_checkboxes(text_rows, checkbox_contours, np.copy(no_graybox))
+  
+  # topics = associate_checkboxes(sentences, checkbox_contours, np.copy(no_graybox))
+  
+  # show(no_lines_img)
+  # show(no_lines_img)
+  # q_image = imread(query_path)
   
   # q_gray = cvtColor(q_image,COLOR_BGR2GRAY)
   # _, q_thresh = threshold(q_image, 127, 255, THRESH_BINARY)
   
   
   
-  birdeye = match_keypoints(t_image, q_image)
-  show(birdeye)
+  
+  # birdeye = match_keypoints(t_image, q_image)
+  # show(birdeye)
   
   
-  mean = 0
-  cb_count = 0
-  ##calcualte mean gray
-  for topic in topics:
-    inputs = topic['INPUTS']
-    for inp in inputs:
-      [x, y, w, h] = inp['CHECKBOX']
-      roi = birdeye[y:y+h, x:x+w]
-      roiGray = cvtColor(roi,COLOR_BGR2GRAY)
-      _, roiThresh = threshold(roiGray, 127, 255, THRESH_BINARY_INV)
-      roiValue = countNonZero(roiThresh)
-      mean += roiValue
-      cb_count += 1
-      # show(roiThresh)
-        # print(roiValue)
+  # mean = 0
+  # cb_count = 0
+  # ##calcualte mean gray
+  # for topic in topics:
+  #   inputs = topic['INPUTS']
+  #   for inp in inputs:
+  #     [x, y, w, h] = inp['CHECKBOX']
+  #     roi = birdeye[y:y+h, x:x+w]
+  #     roiGray = cvtColor(roi,COLOR_BGR2GRAY)
+  #     _, roiThresh = threshold(roiGray, 127, 255, THRESH_BINARY_INV)
+  #     roiValue = countNonZero(roiThresh)
+  #     mean += roiValue
+  #     cb_count += 1
+  #     # show(roiThresh)
+  #       # print(roiValue)
         
-  mean /= cb_count
+  # mean /= cb_count
   
-  print(mean)
-  for topic in topics:
-    inputs = topic['INPUTS']
-    title = topic['TITLE']
-    print(title)
-    for inp in inputs:
-      [x, y, w, h] = inp['CHECKBOX']
-      label = inp['LABEL']
+  # print(mean)
+  # for topic in topics:
+  #   inputs = topic['INPUTS']
+  #   title = topic['TITLE']
+  #   print(title)
+  #   for inp in inputs:
+  #     [x, y, w, h] = inp['CHECKBOX']
+  #     label = inp['LABEL']
       
-      roi = birdeye[y:y+h, x:x+w]
-      roiGray = cvtColor(roi,COLOR_BGR2GRAY)
-      _, roiThresh = threshold(roiGray, 127, 255, THRESH_BINARY_INV)
-      roiValue = countNonZero(roiThresh)
-      # rectangle(birdeye,(x,y),(x+w,y+h),(0,255,0), 10)
-      # show(roi)
-      # print(roiValue)
-      if roiValue > mean:
-        rectangle(birdeye,(x,y),(x+w,y+h),(0,255,0), FILLED)
-        print(f'>{label}')
-        # show(roi)
-        # print(roiValue)
-  show(birdeye);
+  #     roi = birdeye[y:y+h, x:x+w]
+  #     roiGray = cvtColor(roi,COLOR_BGR2GRAY)
+  #     _, roiThresh = threshold(roiGray, 127, 255, THRESH_BINARY_INV)
+  #     roiValue = countNonZero(roiThresh)
+  #     # rectangle(birdeye,(x,y),(x+w,y+h),(0,255,0), 10)
+  #     # show(roi)
+  #     # print(roiValue)
+  #     if roiValue > mean:
+  #       rectangle(birdeye,(x,y),(x+w,y+h),(0,255,0), FILLED)
+  #       print(f'>{label}')
+  #       # show(roi)
+  #       # print(roiValue)
+  # show(birdeye);
   
   
   waitKey(0)
   destroyAllWindows()
 
 if __name__ == "__main__":
+  print("M_AM APELAT SA MA BATA MAMAICA MEA")
   init()

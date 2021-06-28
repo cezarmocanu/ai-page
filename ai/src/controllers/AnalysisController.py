@@ -83,7 +83,13 @@ def analyze():
         
         return 'ANALYSIS CREATED'
     else:
-        forms = TemplateForm.query.all()
+        status = request.args.get('status')
+        forms = []
+        
+        if status != None:
+            forms = TemplateForm.query.filter_by(status=status)
+        else:
+            forms = TemplateForm.query.all()
         
         output = []
         
@@ -95,31 +101,37 @@ def analyze():
         
         return jsonify(output)
     
-@AnalysisController.route('/<form_id>')
+@AnalysisController.route('/<form_id>', methods=['GET', 'DELETE'])
 def analysis_get_one(form_id):
-    form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
-    output = dump(form)
-    output['pages'] = []
-    
-    for page in form.pages:
-        p = dump(page)
-        topics = []
-        for topic in page.topics:
-            t = dump(topic)
-            options = []
-            for option in topic.options:
-                options.append(dump(option))
-            t['options'] = sorted(options, key=lambda opt: int(opt['id']), reverse=False)
-            topics.append(t)
-        p['topics'] = sorted(topics, key=lambda top: int(top['id']), reverse=False)
-        output['pages'].append(p)
-    
-    pages = sorted(output['pages'], key=lambda page: int(page['order_number']), reverse=False)
-    
-    output['pages'] = pages
-    
-    
-    return jsonify(output)
+    if request.method == 'DELETE':
+        form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+        db.session.delete(form)
+        db.session.commit()
+        return 'ok'
+    if request.method == 'GET':
+        form = TemplateForm.query.filter_by(id = form_id).first_or_404(description='No form with that id')
+        output = dump(form)
+        output['pages'] = []
+
+        for page in form.pages:
+            p = dump(page)
+            topics = []
+            for topic in page.topics:
+                t = dump(topic)
+                options = []
+                for option in topic.options:
+                    options.append(dump(option))
+                t['options'] = sorted(options, key=lambda opt: int(opt['id']), reverse=False)
+                topics.append(t)
+            p['topics'] = sorted(topics, key=lambda top: int(top['id']), reverse=False)
+            output['pages'].append(p)
+
+        pages = sorted(output['pages'], key=lambda page: int(page['order_number']), reverse=False)
+
+        output['pages'] = pages
+
+
+        return jsonify(output)
 
 @AnalysisController.route('/<form_id>/page/<page_number_str>')
 def analysis_get_one_page(form_id, page_number_str):
@@ -225,7 +237,16 @@ def analysis_update_data_and_verify(form_id, page_number):
     
     if is_page_verified(queried_page):
         queried_page.verified = True
-        
+    
+    form_verified = True
+    for index,page in enumerate(form.pages):
+        if page.verified == False:
+            form_verified = False
+            break
+    
+    if form_verified:
+        form.status = 'VERIFIED'
+
     db.session.commit()
     
     return 'success'
@@ -266,6 +287,15 @@ def analysis_verify_page_data(form_id, page_number):
     
     if is_page_verified(queried_page):
         queried_page.verified = True
+        
+    form_verified = True
+    for index,page in enumerate(form.pages):
+        if page.verified == False:
+            form_verified = False
+            break
+    
+    if form_verified:
+        form.status = 'VERIFIED'
         
     db.session.commit()
     

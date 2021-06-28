@@ -15,3 +15,13 @@ Content-Type: application/json
     "id": 66,
     "type": "OPTION"
 }
+
+###
+
+GET http://localhost:5000/analysis?status=VERIFIED
+Content-Type: application/json
+
+###
+
+GET http://localhost:5000/collector/46/json
+Content-Type: application/json

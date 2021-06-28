@@ -1,2 +1,3 @@
 from .TemplateController import TemplateController
 from .AnalysisController import AnalysisController
+from .CollectorController import CollectorController

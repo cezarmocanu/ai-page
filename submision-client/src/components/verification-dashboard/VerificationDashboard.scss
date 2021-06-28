@@ -24,12 +24,77 @@
     }
 }
 
+
+@keyframes hover-browse-item {
+    0%   {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0.9);
+        background-color: $hover-color;
+        -webkit-box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6); 
+        box-shadow: 5px 5px 6px 1px rgba(0,0,0,0.6);
+    }
+}
+
+
+@keyframes navigation-open {
+    0%   {
+        transform: translateX(-100%);
+        transform-origin: left;
+        opacity: 0;
+    }
+    100% {
+        width:auto;
+        transform-origin: left;
+        transform: translateX(0%);
+    }
+}
+
+@keyframes show-shortcuts {
+    0%{
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    100%{
+        opacity: 1;
+        transform: translateX(0%);
+    }
+}
 .verification-dashboard{
 
+    .shortcuts-toast {
+        position: absolute;
+        left: 1rem;
+        bottom: 1rem;
+        z-index: 100;
+        max-width: 40%;
+        background-color: $white;
+        animation-name: show-shortcuts;
+        animation-duration: 1s;
+        animation-timing-function: ease-in-out;
+        .toast-header{
+            background-color: $primary;
+            color:$white;
+            display: flex;
+            justify-content: space-between;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+
+            button{
+                color:$white;
+            }
+        }
+    }
+
+    .navigation{
+        animation-name: navigation-open;
+        animation-duration: 1s;
+    }
+
     .prediction-list{
-       // border-top: 1px solid lighten($secondary, 30%);
         overflow-y: auto;
-        height: 100%;
+        height: calc(100% - 10rem);
         overflow-x: hidden;
         margin-top: 8rem;
         padding-bottom: 8rem;

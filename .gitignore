@@ -14,3 +14,12 @@ node_modules/
 /form-collector/node_modules/
 /storage/*
 /storage/
+
+*.todo
+*.jpg
+*.jp2
+*.vscode
+*.pdf
+*.pyc
+*.md
+.DS_Store
